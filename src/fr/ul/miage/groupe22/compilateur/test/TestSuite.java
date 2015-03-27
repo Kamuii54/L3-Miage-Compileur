@@ -1,4 +1,4 @@
-package fr.ul.miage.groupe22.compilateur;
+package fr.ul.miage.groupe22.compilateur.test;
 
 import java.io.FileInputStream;
 
