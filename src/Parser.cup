@@ -1,0 +1,97 @@
+/*
+ * analyseur syntaxique
+ * expression arithmetique
+ *
+ * auteur : guillaumepierson8@etu.univ-lorraine.fr
+ * (c) 2015
+ */ 
+package fr.ul.miage.groupe22.compilateur.generated;
+
+
+import java_cup.runtime.Symbol;
+
+/* la grammaire */
+
+terminal AO, AF, PO, PF, PV, V, E;
+terminal String NAME;
+terminal VOID, INT;
+terminal VAL;
+terminal PLUS, MOINS, FOIS, DIVISE;
+terminal RETURN;
+terminal IF, ELSE, WHILE, INFERIEUR, SUPERIEUR;
+
+
+non terminal liste;
+non terminal command, declaration, affectation, ret;
+non terminal appel;
+non terminal Integer type; /* Type de données */
+non terminal /*Categorie*/ cat; /* Fonction ou variable */
+non terminal vars, value, data;
+non terminal parametres, parametre;
+non terminal expression, operator;
+non terminal condition, iteration, boolean_operator, boolean_expression;
+
+start with liste;
+
+liste  ::= command liste 
+	|
+	;
+
+/*------debut-------*/
+command ::= declaration | affectation | ret | condition | iteration | appel
+    ;
+    
+declaration ::= type:t NAME:n cat:c 
+	;
+
+cat ::= PO parametres PF AO liste AF
+	   | value vars PV
+	;
+             
+vars ::= V NAME value vars
+		|
+	; 
+	
+value ::= E VAL | 
+	;
+	
+type ::= VOID {: RESULT = new Integer(0); :}
+	   | INT {: RESULT = new Integer(1); :} 
+	;
+	
+appel ::= NAME PO parametres PF PV
+	;
+	
+parametres ::= parametre V parametres | parametre |
+	;
+	
+parametre ::= type NAME | expression
+	;
+
+affectation ::= NAME E expression PV
+	;
+	
+data ::= VAL | NAME | NAME PO parametres PF
+	;
+	
+expression ::= data operator expression | data | PO expression PF operator expression | PO expression PF
+	;
+	
+operator ::= PLUS | MOINS | FOIS | DIVISE
+	;
+	
+ret ::= RETURN expression PV
+	;
+	
+condition ::= IF PO boolean_expression PF AO liste AF | IF PO boolean_expression PF AO liste AF ELSE AO liste AF
+	;
+	
+boolean_expression ::= expression boolean_operator boolean_expression | expression
+	;
+	
+boolean_operator ::= INFERIEUR | SUPERIEUR | E E 
+	;	
+	
+iteration ::= WHILE PO boolean_expression PF AO liste AF
+	;
+/*------fin--------*/

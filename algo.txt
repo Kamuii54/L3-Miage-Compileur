@@ -1,0 +1,160 @@
+Créer un table des symboles 
+TDS
+idf: i (main)
+ctxt : global
+cat = var (fonct)
+val = 0 (pas de val pour main)
+type = int 
+(nb_param)
+(nb_var)
+
+Algo
+
+Resultat res : code Assembleur(String)
+
+debut
+res <- NULL
+res <- + .include beta.uasm
+	cMove(pile, sp)
+	br(debut)
+res <- generer data()
+res <- + 
+	debut :
+		Call(main)
+		halt()
+res	<-+ genererfonction()
+res <-+ pile:
+
+fin
+
+
+
+
+generer data
+	données tds
+	resultat res: asm
+	
+	
+	
+.include beta.uasm
+
+CMOVE(pile, ST)
+BR(debut)
+
+debut:
+	res <- rien
+	cas où a est constant
+		CMOVE(a.val, ro)
+		PUSH(r0)
+	a est IDF
+		LD(a.idf, ro)
+		PUSH(r0)
+	a est + 
+		res+= generer_expression(fg(a))
+		res+= generer_expression(fd(a))
+		POP(r2)
+		POP(r1)
+		ADD(R1,R2,R3)
+		PUSH(R3)
+		
+		
+generer_affection =
+	generer_expression +
+		generer_expression 6
+			CMOVE(6, R0)
+			PUSH(r0)
+		Generer_exp(/)
+			generer_exp(j)
+				LD(j, R0)
+				PUSH(R0)
+			generer_exp(3)
+		POP(R2)
+		POP(R1)
+		DIV(R1, R2, R3)
+		PUSH(R3)
+	POP(R2)
+	POP(R1)
+	ADD(R1,R2, R3)
+	PUSH(R3)
+POP(R0)
+ST(R0, i)
+
+
+		
+			
+
+idf = 1, 	scope=global, type int, cat: var, val : 0
+idf = 2, 	scope=global, type int, cat: var, val : 0
+idf = main, scope=global, type void, cat: fonction: 0
+
+2)
+Programme:
+	Main:
+		=
+			i
+			0
+		=
+			j
+			-
+				+
+					2
+					i
+				+
+					3
+					i
+
+					
+.include beta.uasm
+
+CMOVE(pile, SP)
+BR(debut)
+i : LONG(0)
+j : LONG(0)
+
+debut:
+	CALL(main)
+	HALT()
+	
+main:
+	CMOVE(6, R0)
+	PUSH(R0)
+	
+	POP(R0)
+	ST(R0, i)
+	
+	CMOVE(2, R0)
+	PUSH(R0)
+	
+	LD(i, R0)
+	PUSH(R0)
+	
+	POP(R2)
+	POP(R1)
+	ADD(R1, R2, R3)
+	PUSH(R3)
+	
+	CMOVE(3, R0)
+	PUSH(R0)
+	
+	LD(i, R0)
+	PUSH(R0)
+	
+	POP(R2)
+	POP(R1)
+	ADD(R1, R2, R3)
+	PUSH(R3)
+	
+	POP(R2)
+	POP(R1)
+	SUB(R1, R2, R3)
+	PUSH(R3)	
+	
+	POP(R2)
+	POP(R1)
+	ADD(R1, R2, R3)
+	PUSH(R3)	
+	
+	POP(R0)
+	ST(R0, j)
+
+pile:
