@@ -1,12 +1,4 @@
 ########################
-####    Project     ####
-
-build/
-doc/
-!lib/*.jar
-!extlib/*.jar
-
-########################
 ####    Generic     ####
 
 # Created by https://www.gitignore.io
@@ -126,3 +118,11 @@ Temporary Items
 # Linux trash folder which might appear on any partition or disk
 .Trash-*
 /dist/
+
+########################
+####    Project     ####
+
+build/
+doc/
+!lib/
+!extlib/
