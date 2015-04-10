@@ -1,3 +1,32 @@
+.inlcude intio.uasm
+.optiontty
+
+RDINT()
+WRINT()
+
+Grammaire
+--------------------------------
+exp ::= expr op1 facteur
+	| facteur;
+	
+facteur ::= facteur op2 atome
+	| atome
+
+
+atome :: = CONST
+		| IDF
+		| appel
+		| po expression PF
+		| read PO PF
+		;
+
+ 3 + 5 * 6 + 2
+
+---------------------
+
+
+
+
 Créer un table des symboles 
 TDS
 idf: i (main)

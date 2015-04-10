@@ -21,8 +21,8 @@ import java_cup.runtime.Symbol;
 /* macros */
 SEP      =   [ \t]
 RC       =   "\n"|"\r\n"
-val 	 = [0-9]+
-name     =   [a-zA-Z0-9]+
+const 	 =   [0-9]+
+idf      =   [a-zA-Z0-9]+
 comment  =   \/\*(([^*])|(\*[^/]))*\*\/ 
 
 
@@ -46,10 +46,12 @@ comment  =   \/\*(([^*])|(\*[^/]))*\*\/
 "if"			{return new Symbol(ParserSym.IF);} 
 "else"			{return new Symbol(ParserSym.ELSE);} 
 "while"			{return new Symbol(ParserSym.WHILE);} 
+"read"			{return new Symbol(ParserSym.READ);}
+"write"			{return new Symbol(ParserSym.WRITE);}
 "<"				{return new Symbol(ParserSym.INFERIEUR);}
 ">"				{return new Symbol(ParserSym.SUPERIEUR);}  
-{val}			{return new Symbol(ParserSym.VAL, yytext());}
-{name} 			{return new Symbol(ParserSym.NAME, yytext());}
+{const}			{return new Symbol(ParserSym.CONST, new Integer(yytext()));}
+{idf} 			{return new Symbol(ParserSym.IDF, yytext());}
 {RC}			{;}
 {comment} 		{;}
 {SEP}      		{;}

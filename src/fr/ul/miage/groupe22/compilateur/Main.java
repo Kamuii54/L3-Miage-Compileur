@@ -21,6 +21,7 @@ public class Main {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
+		long time = System.currentTimeMillis();
 		FileInputStream fis = new FileInputStream("test-suite/00-syntaxe.miage");
 		ParserCup parser = new ParserCup(new Yylex(fis));
 		try {
@@ -28,8 +29,8 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("...Erreur de syntaxe ");
-			System.exit(1);
 		}
+		System.out.println("Temps : " + (System.currentTimeMillis() - time) + " ms");
 		
 	}
 }

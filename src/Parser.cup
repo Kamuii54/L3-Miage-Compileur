@@ -9,81 +9,109 @@ package fr.ul.miage.groupe22.compilateur.generated;
 
 
 import java_cup.runtime.Symbol;
+import fr.ul.miage.groupe22.compilateur.environnement.*;
+
+action code {:
+	TableDesSymboles tds = new TableDesSymboles();
+:}
 
 /* la grammaire */
 
 terminal AO, AF, PO, PF, PV, V, E;
-terminal String NAME;
+terminal String IDF;
 terminal VOID, INT;
-terminal VAL;
+terminal CONST, READ, WRITE;
 terminal PLUS, MOINS, FOIS, DIVISE;
 terminal RETURN;
 terminal IF, ELSE, WHILE, INFERIEUR, SUPERIEUR;
 
-
+non terminal liste_definition, definition, definition_var, definition_fonction;
 non terminal liste;
-non terminal command, declaration, affectation, ret;
-non terminal appel;
-non terminal Integer type; /* Type de données */
-non terminal /*Categorie*/ cat; /* Fonction ou variable */
-non terminal vars, value, data;
-non terminal parametres, parametre;
-non terminal expression, operator;
-non terminal condition, iteration, boolean_operator, boolean_expression;
+non terminal command,affectation, ret;
+non terminal /*Noeud*/ appel;
+non terminal /*Type*/ type; /* Type de données */
+non terminal vars, value, facteur, atome;
+non terminal /*List<Noeud>*/ parametres;
+non terminal /*Noeud*/ parametre;
+non terminal /*Noeud*/ expression;
+non terminal /*Operateur*/ operateur1, operateur2;
+non terminal condition, conditionelse, iteration, boolean_operator, boolean_expression;
 
-start with liste;
+start with liste_definition;
+
+liste_definition ::= definition liste_definition
+	|
+	;
 
 liste  ::= command liste 
 	|
 	;
 
 /*------debut-------*/
-command ::= declaration | affectation | ret | condition | iteration | appel
+command ::= definition | affectation | ret | condition | iteration | appel PV
     ;
     
-declaration ::= type:t NAME:n cat:c 
+definition ::= definition_var | definition_fonction
 	;
 
-cat ::= PO parametres PF AO liste AF
-	   | value vars PV
+definition_var ::= type:t IDF:n value vars PV
+	;
+
+definition_fonction ::= type:t IDF:n PO parametres PF AO liste AF
 	;
              
-vars ::= V NAME value vars
+vars ::= V IDF value vars
 		|
 	; 
 	
-value ::= E VAL | 
+value ::= E expression |  
 	;
 	
-type ::= VOID {: RESULT = new Integer(0); :}
-	   | INT {: RESULT = new Integer(1); :} 
+type ::= VOID// {: RESULT = new Type.VOID; :}
+	   | INT// {: RESULT = new Type.INT; :} 
 	;
 	
-appel ::= NAME PO parametres PF PV
+appel ::= IDF PO parametres PF 
+		| READ PO PF //{: RESULT = new Noeud(Noeud.READ) :}
+		| WRITE PO parametre PF
 	;
 	
 parametres ::= parametre V parametres | parametre |
 	;
 	
-parametre ::= type NAME | expression
+parametre ::= type IDF | expression
 	;
 
-affectation ::= NAME E expression PV
+affectation ::= IDF E expression PV
 	;
 	
-data ::= VAL | NAME | NAME PO parametres PF
+expression ::= expression operateur1 facteur | facteur
 	;
 	
-expression ::= data operator expression | data | PO expression PF operator expression | PO expression PF
+facteur ::= facteur operateur2 atome | atome | operateur1 atome
 	;
 	
-operator ::= PLUS | MOINS | FOIS | DIVISE
+atome ::= CONST:c //{: RESULT = new Noeud(new Constante(c)) :}
+		| IDF:s/// {: RESULT = new Noeud(new IDF(tds.find(s)) :}
+		| appel:a //{: RESULT = a :}
+		| PO expression:a PF //{: RESULT = a; :}
+	;
+	
+operateur1 ::= PLUS //{: RESULT = new Plus(); :}
+		| MOINS //{: RESULT = new Moins(); :}
+	;
+	
+operateur2 ::= FOIS //{: RESULT = new Fois(); :}
+		 | DIVISE// {: RESULT = new Divise(); :}
 	;
 	
 ret ::= RETURN expression PV
 	;
+
+condition ::= IF PO boolean_expression PF AO liste AF conditionelse 
+	;
 	
-condition ::= IF PO boolean_expression PF AO liste AF | IF PO boolean_expression PF AO liste AF ELSE AO liste AF
+conditionelse ::= ELSE AO liste AF | 
 	;
 	
 boolean_expression ::= expression boolean_operator boolean_expression | expression
