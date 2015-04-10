@@ -43,4 +43,8 @@ public class Definition {
 			return false;
 		return true;
 	}
+
+	public String getIdentifiant() {
+		return this.idf;
+	}
 }

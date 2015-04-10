@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public abstract class Symbole {
+public class Symbole {
 
 	private int idf;
 	
@@ -12,7 +12,7 @@ public abstract class Symbole {
 	
 	private Type type = Type.INT;
 	
-	private Map<String, String> values = new HashMap<>();
+	public Map<String, String> values = new HashMap<>();
 	
 
 	@Override

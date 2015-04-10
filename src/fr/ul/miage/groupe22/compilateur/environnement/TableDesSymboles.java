@@ -25,7 +25,12 @@ public class TableDesSymboles {
 	}
 
 	public Symbole getSymbole(Definition def) {
-		return this.table.get(def);
+		Symbole sym = this.table.get(def);
+		if(sym == null){
+			Definition defGlobal = new Definition(def.getIdentifiant() , Global.getInstance());
+			sym = this.table.get(defGlobal);
+		}
+		return sym;
 	}
 	
 	public void insert(String identifiant, Symbole portee, Symbole symbole){
