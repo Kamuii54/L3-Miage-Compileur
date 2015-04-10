@@ -8,6 +8,11 @@ public class Definition {
 
 	private String idf;
 
+	public Definition(String idf, Symbole scope) {
+		this.idf = idf;
+		this.scope = scope;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
