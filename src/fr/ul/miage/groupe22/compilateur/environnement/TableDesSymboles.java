@@ -1,6 +1,7 @@
 package fr.ul.miage.groupe22.compilateur.environnement;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import fr.ul.miage.groupe22.compilateur.environnement.Global;
 
@@ -36,5 +37,9 @@ public class TableDesSymboles {
 	public void insert(String identifiant, Symbole portee, Symbole symbole){
 		Definition def = new Definition(identifiant, portee);
 		this.table.put(def, symbole);
+	}
+
+	public Map<Definition, String> getTable() {
+		return this.getTable();
 	}
 }

@@ -12,6 +12,8 @@ public class Symbole {
 	
 	private Type type = Type.INT;
 	
+	private Symbole scope;
+	
 	public Map<String, String> values = new HashMap<>();
 	
 
@@ -60,5 +62,53 @@ public class Symbole {
 	}
 
 
-	private Symbole scope;
+	public int getIdf() {
+		return idf;
+	}
+
+
+	public void setIdf(int idf) {
+		this.idf = idf;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public Type getType() {
+		return type;
+	}
+
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+
+	public Symbole getScope() {
+		return scope;
+	}
+
+
+	public void setScope(Symbole scope) {
+		this.scope = scope;
+	}
+
+
+	public Map<String, String> getValues() {
+		return values;
+	}
+
+
+	public void setValues(Map<String, String> values) {
+		this.values = values;
+	}
+
 }

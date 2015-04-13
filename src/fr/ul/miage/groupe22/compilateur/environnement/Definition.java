@@ -47,4 +47,20 @@ public class Definition {
 	public String getIdentifiant() {
 		return this.idf;
 	}
+
+	public Symbole getScope() {
+		return scope;
+	}
+
+	public void setScope(Symbole scope) {
+		this.scope = scope;
+	}
+
+	public String getIdf() {
+		return idf;
+	}
+
+	public void setIdf(String idf) {
+		this.idf = idf;
+	}
 }
