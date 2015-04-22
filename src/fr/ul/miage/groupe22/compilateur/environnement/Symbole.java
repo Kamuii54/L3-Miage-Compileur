@@ -8,13 +8,56 @@ public class Symbole {
 
 	private int idf;
 	
+	private static int next_idf=1;
+
 	private String name;
 	
 	private Type type = Type.INT;
 	
-	private Symbole scope;
+	private Scope scope;
 	
 	public Map<String, String> values = new HashMap<>();
+	
+	public Symbole() {}
+	
+	public Symbole(String name, Scope scope, Map<String, String> values) {
+		this.idf=next_idf++;
+		this.name = name;
+		this.scope = scope;
+		this.values = values;
+	}
+
+
+	public Symbole(String name, Type type, Scope scope, Map<String, String> values) {
+		this.idf=next_idf++;
+		this.name = name;
+		this.type = type;
+		this.scope = scope;
+		this.values = values;
+	}
+
+
+	public Symbole(String name, Scope scope) {
+		this.idf=next_idf++;
+		this.name = name;
+		this.scope = scope;
+	}
+
+
+	public Symbole(String name, Type type, Scope scope) {
+		this.idf=next_idf++;
+		this.name = name;
+		this.type = type;
+		this.scope = scope;
+	}
+	
+	public Symbole(String name, Type type, Scope scope,int valeur) {
+		this.idf=next_idf++;
+		this.name = name;
+		this.type = type;
+		this.scope = scope;
+		this.add("valeur", Integer.toString(valeur));
+	}
 	
 
 	@Override
@@ -76,7 +119,6 @@ public class Symbole {
 		return name;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -92,12 +134,12 @@ public class Symbole {
 	}
 
 
-	public Symbole getScope() {
+	public Scope getScope() {
 		return scope;
 	}
 
 
-	public void setScope(Symbole scope) {
+	public void setScope(Scope scope) {
 		this.scope = scope;
 	}
 
@@ -109,6 +151,20 @@ public class Symbole {
 
 	public void setValues(Map<String, String> values) {
 		this.values = values;
+	}
+	
+	public void add(String key, String value) {
+		this.values.put(key,value);
+	}
+
+	@Override
+	public String toString() {
+		return "Symbole [idf=" + idf + ", name=" + name + ", type=" + type
+				+ ", scope=" + scope + ", values=" + values + "]";
+	}
+
+	public String get(String key) {
+		return this.values.get(key);
 	}
 
 }

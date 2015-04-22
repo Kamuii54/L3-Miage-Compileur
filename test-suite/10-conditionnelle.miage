@@ -1,10 +1,11 @@
 /*
- * Test génération de code : 
+ * Test gï¿½nï¿½ration de code : 
  * conditionnelle
  */
 
 int i = 3; int j;
 void main(){
+	int k = 0;
 	if (i < 2){
 		j = 0;
 	}else{

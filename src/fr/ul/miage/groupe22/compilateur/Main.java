@@ -22,10 +22,11 @@ public class Main {
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		long time = System.currentTimeMillis();
-		FileInputStream fis = new FileInputStream("test-suite/00-syntaxe.miage");
+		FileInputStream fis = new FileInputStream("test-suite/06-local.miage");
 		ParserCup parser = new ParserCup(new Yylex(fis));
 		try {
 			parser.parse();
+			parser.affiche();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("...Erreur de syntaxe ");

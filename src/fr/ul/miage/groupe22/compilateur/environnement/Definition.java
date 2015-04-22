@@ -4,11 +4,16 @@ package fr.ul.miage.groupe22.compilateur.environnement;
 
 public class Definition {
 
-	private Symbole scope;
+	@Override
+	public String toString() {
+		return "Definition [idf=" + idf + "]";
+	}
+
+	private Scope scope;
 
 	private String idf;
 
-	public Definition(String idf, Symbole scope) {
+	public Definition(String idf, Scope scope) {
 		this.idf = idf;
 		this.scope = scope;
 	}
@@ -48,11 +53,11 @@ public class Definition {
 		return this.idf;
 	}
 
-	public Symbole getScope() {
+	public Scope getScope() {
 		return scope;
 	}
 
-	public void setScope(Symbole scope) {
+	public void setScope(Scope scope) {
 		this.scope = scope;
 	}
 

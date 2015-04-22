@@ -9,117 +9,292 @@ package fr.ul.miage.groupe22.compilateur.generated;
 
 
 import java_cup.runtime.Symbol;
+import fr.ul.miage.groupe22.compilateur.instructions.*;
 import fr.ul.miage.groupe22.compilateur.environnement.*;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
+import java.util.Iterator;
+import java.util.ArrayList;
 
-action code {:
-	TableDesSymboles tds = new TableDesSymboles();
+parser code {:
+
+	public void affiche() {
+		System.out.println(action_obj.master);
+		System.out.println(action_obj.tds);
+	}
+
 :}
 
+action code {:
+
+	TableDesSymboles tds = new TableDesSymboles();
+	Noeud master = new Root();
+	ArrayList<Noeud> current_list = new ArrayList<Noeud>();
+
+	public Stack<Scope> scopes = new Stack<>(); // Portées des variables
+
+	public void newScope() {
+		scopes.push(new Scope());
+	}
+
+	public Scope getLastScope() {
+    	if (scopes.isEmpty()) {
+    	   return ScopeGlobal.getInstance();
+    	}
+		return scopes.peek();
+	}
+
+	public Scope deleteScope() {
+		return scopes.pop();
+	}
+
+	/*
+	public void changeTDS(String idf, Noeud valeur) {
+	 
+	 if (tds.hasSymbole(idf,getLastScope())) {
+	  
+	 Symbole s = new Symbole(idf,"variable",getLastScope(),);
+	 tds.insert(idf,getLastScope(),s); } else if
+	 (tds.hasSymbole(idf,ScopeGlobal.getInstance())) { Symbole s = new
+	 Symbole(idf,"variable",ScopeGlobal.getInstance());
+	 tds.insert(idf,ScopeGlobal.getInstance(),s); } else {
+	  ystem.out.println("Erreur variable non trouv�1"); } } }
+	  
+	 public Noeud createNoeud(String idf) { Noeud n=null; if
+	 (tds.hasSymbole(idf,getLastScope())) { n=new Noeud
+	 ("variable",tds.getSymbole(idf,getLastScope())); Symbole s = new
+	 Symbole(idf,"variable",getLastScope(),Integer.toString(v));
+	 //s.addValue("valeur",Integer.toString(v)); } else if
+	 (tds.hasSymbole(idf,ScopeGlobal.getInstance())) { n=new Noeud
+	 ("variable",tds.getSymbole(idf,ScopeGlobal.getInstance())); } else {
+	 System.out.println("Erreur variable non trouv�2"); } return n; }
+	 */
+
+	public Noeud createAffect(String idf, Noeud n) {
+		Noeud n_ret = null;
+		//il met variable dans T..
+		Noeud n_g = new Variable(idf);
+		Noeud n_d = n;
+		n_ret = new Affectation();
+		n_ret.InsererFilsGauche(n_g);
+		n_ret.InsererFilsDroit(n_d);
+		return n_ret;
+	}
+
+	public Noeud defVar(Type t, String idf, Noeud n) {
+		Symbole s = new Symbole(idf, t, getLastScope());
+		tds.insert(idf, getLastScope(), s);
+
+		Noeud n_ret = null;
+		if (n != null) {
+			n_ret = createAffect(idf, n);
+		} else {
+			// valeur par défaut
+			n_ret = createAffect(idf, new Constante(0));
+		}
+		return n_ret;
+	}
+
+	public Noeud insertionFgFd(Noeud o, Noeud f, Noeud a) {
+		o.InsererFilsGauche(f);
+		o.InsererFilsDroit(a);
+		return o;
+	}
+
+	public void hasDoubleDef (Noeud var) throws Exception{
+	//meme nom et meme scope -> appel sur Symbole plutot que Noeud ? non Def =D
+		if (tds.hasSymbole(var.getIdf(), getLastScope())) {
+			throw new Exception ("Variable "+var.getIdf() +" déja définie");
+		}
+	}
+	
+	public void existVar (String idf) throws Exception{
+		if (!tds.hasSymbole(new Definition(idf,getLastScope()))) {
+			if (!tds.hasSymbole(new Definition(idf,ScopeGlobal.getInstance()))) {
+				throw new Exception ("Variable "+ idf +" non définie");
+			}
+		}
+	}
+	
+	public void isFonctionInt (Noeud n) throws Exception{
+		
+		if (tds.hasSymbole(n.getIdf(), ScopeGlobal.getInstance())) {
+			Symbole s = tds.getSymbole(n.getIdf(), ScopeGlobal.getInstance());
+			 throw new Exception ("Fonction "+ n.getIdf() +" mauvais typage");
+		}
+	}
+	
+	public void  verifNbParam(String idf, ArrayList<Noeud> p) throws Exception {
+	Definition d = new Definition(idf,ScopeGlobal.getInstance());
+		if (tds.hasSymbole(d)) {
+			Symbole s = tds.getSymbole(d);
+			
+			String nbparam = s.getValues().get("nbParam");
+			if (Integer.parseInt(nbparam)==p.size()) { 
+				 throw new Exception ("Fonction "+ idf +" mauvais nombre paramètres");
+			}
+		}
+	}
+
+	public void defFonction(Type t, String n, ArrayList<Noeud> l, ArrayList<Noeud> param) {
+		//mettre a jour values du noeud => nb de param
+		Noeud noeud_f = new Fonction(n);
+		Symbole s = new Symbole(n, t, ScopeGlobal.getInstance());
+		if(param != null)
+			s.add("nbParam", ""+param.size());
+		else 
+			s.add("nbParam", "0");
+		Set cles = tds.getTable().keySet();
+		Iterator it = cles.iterator();
+		noeud_f.InsererListeFils(l);
+		master.InsererUnFils(noeud_f);
+
+		tds.insert(n, ScopeGlobal.getInstance(), s);
+	}
+
+	public Noeud createIf(Noeud b, ArrayList<Noeud> l, ArrayList<Noeud> c) {
+		Noeud n_ret = new Condition();
+		n_ret.InsererUnFils(b);
+		n_ret.InsererUnFils(new Container(l));
+		if (c != null) {
+			n_ret.InsererUnFils(new Container(c));
+		}
+		return n_ret;
+	}
+
+	public Noeud createBool(Noeud e, Noeud bo, Noeud be) {
+		e.InsererFilsGauche(bo);
+		e.InsererFilsDroit(be);
+		return e;
+	}
+
+	public Noeud createBoucle(Noeud be, ArrayList<Noeud> l) {
+		Noeud n_ret = new Boucle();
+		n_ret.InsererFilsGauche(be);
+		n_ret.InsererFilsDroit(new Container(l));
+
+		return n_ret;
+	}
+
+	public Noeud createExpression() {
+		return null;
+	}
+	
+:}
+ 
 /* la grammaire */
 
 terminal AO, AF, PO, PF, PV, V, E;
 terminal String IDF;
 terminal VOID, INT;
-terminal CONST, READ, WRITE;
+terminal READ, WRITE;
 terminal PLUS, MOINS, FOIS, DIVISE;
 terminal RETURN;
 terminal IF, ELSE, WHILE, INFERIEUR, SUPERIEUR;
+terminal Integer CONST;
 
 non terminal liste_definition, definition, definition_var, definition_fonction;
-non terminal liste;
-non terminal command,affectation, ret;
-non terminal /*Noeud*/ appel;
-non terminal /*Type*/ type; /* Type de données */
-non terminal vars, value, facteur, atome;
-non terminal /*List<Noeud>*/ parametres;
-non terminal /*Noeud*/ parametre;
-non terminal /*Noeud*/ expression;
-non terminal /*Operateur*/ operateur1, operateur2;
-non terminal condition, conditionelse, iteration, boolean_operator, boolean_expression;
+non terminal ArrayList<Noeud> liste,conditionelse,parametres;
+non terminal Noeud affectation, ret;
+non terminal Noeud appel, facteur, atome, value;
+non terminal Type type; /* Type de donnÃ©es */
+non terminal vars;
+non terminal Noeud parametre;
+non terminal Noeud expression;
+non terminal Noeud operateur1, operateur2;
+non terminal Noeud boolean_expression, boolean_operator;
+non terminal Noeud condition, iteration;
+non terminal Noeud command;
 
-start with liste_definition;
+start with liste_definition ;
 
 liste_definition ::= definition liste_definition
 	|
 	;
 
-liste  ::= command liste 
-	|
+liste  ::= command:c liste:l {: if (l==null) {l=new ArrayList<Noeud>();} l.add(c); RESULT = l; :}
+	| {: RESULT = new ArrayList<Noeud>(); :}
 	;
 
 /*------debut-------*/
-command ::= definition | affectation | ret | condition | iteration | appel PV
+command ::= definition | affectation:af {: RESULT=af; :} | ret:r {: RESULT=r; :} | condition:c {: RESULT=c; :} | iteration:i {: RESULT=i; :} | appel:a {: RESULT=a; :} PV
     ;
     
 definition ::= definition_var | definition_fonction
 	;
 
-definition_var ::= type:t IDF:n value vars PV
+definition_var ::= type:t IDF:n value:v vars PV
+{: defVar(t,n,v); :}
 	;
 
-definition_fonction ::= type:t IDF:n PO parametres PF AO liste AF
+definition_fonction ::=  type:t IDF:n PO {: newScope(); :} parametres:p PF  AO liste:l AF
+{:	defFonction(t,n,l,p); deleteScope();:}
 	;
              
-vars ::= V IDF value vars
+vars ::= V IDF:i value:v vars
 		|
 	; 
 	
-value ::= E expression |  
+value ::= E expression:e {: RESULT = e; :} |   {: RESULT = null; :}
 	;
 	
-type ::= VOID// {: RESULT = new Type.VOID; :}
-	   | INT// {: RESULT = new Type.INT; :} 
+type ::= VOID {: RESULT = Type.VOID; :}
+	   | INT {: RESULT = Type.INT; :} 
 	;
 	
-appel ::= IDF PO parametres PF 
+appel ::= IDF:idf PO parametres:p PF {:  verifNbParam(idf,p); RESULT = new Appel(idf, p); :}
 		| READ PO PF //{: RESULT = new Noeud(Noeud.READ) :}
 		| WRITE PO parametre PF
 	;
 	
-parametres ::= parametre V parametres | parametre |
+parametres ::= parametre:p V parametres:l {: if (l==null) {l=new ArrayList<Noeud>();} l.add(p); RESULT = l; :} 
+		| parametre:p {: ArrayList<Noeud> l=new ArrayList<Noeud>(); l.add(p); RESULT = l; :}
+		| {: RESULT = new ArrayList<Noeud>(); :}
 	;
 	
-parametre ::= type IDF | expression
+parametre ::= type:t IDF:idf {: RESULT = new Variable(idf); :} | expression:e {: RESULT=e; :} 
 	;
 
-affectation ::= IDF E expression PV
+affectation ::= IDF:idf E expression:e PV {: existVar(idf);Noeud n=createAffect(idf,e);RESULT=n; :}
 	;
 	
-expression ::= expression operateur1 facteur | facteur
+expression ::= expression:e operateur1:o facteur:f {: RESULT = insertionFgFd(o,e,f); :} | facteur:f {: RESULT=f; :}
 	;
 	
-facteur ::= facteur operateur2 atome | atome | operateur1 atome
+facteur ::= facteur:f operateur2:o atome:a {: RESULT = insertionFgFd(o,f,a); :} | atome:a {: RESULT=a; :} 
+		  | operateur1:o atome:a {: RESULT = insertionFgFd(o,new Constante(0),a); :}
 	;
 	
-atome ::= CONST:c //{: RESULT = new Noeud(new Constante(c)) :}
-		| IDF:s/// {: RESULT = new Noeud(new IDF(tds.find(s)) :}
-		| appel:a //{: RESULT = a :}
-		| PO expression:a PF //{: RESULT = a; :}
+atome ::= CONST:c {: RESULT = new Constante(c); :}
+		| IDF:s {: RESULT = new Variable(s); :}
+		| appel:a {: isFonctionInt (a); RESULT = a; :}
+		| PO expression:a PF {: RESULT = a; :}
 	;
 	
-operateur1 ::= PLUS //{: RESULT = new Plus(); :}
-		| MOINS //{: RESULT = new Moins(); :}
+operateur1 ::= PLUS {: RESULT = new Addition(); :}
+		| MOINS {: RESULT = new Soustraction(); :}
 	;
 	
-operateur2 ::= FOIS //{: RESULT = new Fois(); :}
-		 | DIVISE// {: RESULT = new Divise(); :}
+operateur2 ::= FOIS {: RESULT = new Multiplication(); :}
+		 | DIVISE {: RESULT = new Division(); :}
 	;
 	
-ret ::= RETURN expression PV
+ret ::= RETURN expression:e PV {: Noeud n = new Return(); n.InsererUnFils(e); RESULT = n; :}
 	;
 
-condition ::= IF PO boolean_expression PF AO liste AF conditionelse 
+condition ::= IF PO boolean_expression:b PF AO liste:l AF conditionelse:c {: RESULT=createIf(b,l,c); :}
 	;
 	
-conditionelse ::= ELSE AO liste AF | 
+conditionelse ::= ELSE AO liste:l AF {: RESULT = l; :} | {: RESULT = null; :} 
 	;
 	
-boolean_expression ::= expression boolean_operator boolean_expression | expression
+boolean_expression ::= expression:e boolean_operator:bo boolean_expression:be {: RESULT = createBool(e,bo,be); :} | expression:e {: RESULT = e; :} 
 	;
 	
-boolean_operator ::= INFERIEUR | SUPERIEUR | E E 
+boolean_operator ::= INFERIEUR {: RESULT = new ComparateurInferieur(); :} | SUPERIEUR {: RESULT = new ComparateurSuperieur(); :} | E E {: RESULT = new ComparateurEgal(); :}
 	;	
 	
-iteration ::= WHILE PO boolean_expression PF AO liste AF
+iteration ::= WHILE PO boolean_expression:be PF AO liste:l AF {: RESULT=createBoucle(be,l); :}
 	;
 /*------fin--------*/
