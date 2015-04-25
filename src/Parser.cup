@@ -16,12 +16,19 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.HashSet;
 
 parser code {:
 
 	public void affiche() {
-		System.out.println(action_obj.master);
+		action_obj.master.affiche(0, false, new ArrayList<>());
 		System.out.println(action_obj.tds);
+	}
+	
+	public String generate() {
+	return action_obj.master.genererCode(action_obj.tds,ScopeGlobal.getInstance());
 	}
 
 :}
@@ -31,6 +38,7 @@ action code {:
 	TableDesSymboles tds = new TableDesSymboles();
 	Noeud master = new Root();
 	ArrayList<Noeud> current_list = new ArrayList<Noeud>();
+	Set<Symbole> undeclared = new HashSet<>();
 
 	public Stack<Scope> scopes = new Stack<>(); // Portées des variables
 
@@ -49,30 +57,19 @@ action code {:
 		return scopes.pop();
 	}
 
-	/*
-	public void changeTDS(String idf, Noeud valeur) {
-	 
-	 if (tds.hasSymbole(idf,getLastScope())) {
-	  
-	 Symbole s = new Symbole(idf,"variable",getLastScope(),);
-	 tds.insert(idf,getLastScope(),s); } else if
-	 (tds.hasSymbole(idf,ScopeGlobal.getInstance())) { Symbole s = new
-	 Symbole(idf,"variable",ScopeGlobal.getInstance());
-	 tds.insert(idf,ScopeGlobal.getInstance(),s); } else {
-	  ystem.out.println("Erreur variable non trouv�1"); } } }
-	  
-	 public Noeud createNoeud(String idf) { Noeud n=null; if
-	 (tds.hasSymbole(idf,getLastScope())) { n=new Noeud
-	 ("variable",tds.getSymbole(idf,getLastScope())); Symbole s = new
-	 Symbole(idf,"variable",getLastScope(),Integer.toString(v));
-	 //s.addValue("valeur",Integer.toString(v)); } else if
-	 (tds.hasSymbole(idf,ScopeGlobal.getInstance())) { n=new Noeud
-	 ("variable",tds.getSymbole(idf,ScopeGlobal.getInstance())); } else {
-	 System.out.println("Erreur variable non trouv�2"); } return n; }
-	 */
+	public void verifierUndeclared() throws Exception {
+		if(!undeclared.isEmpty()){
+			Iterator<Symbole> it = undeclared.iterator();
+			while(it.hasNext()){
+				Symbole sym = it.next();
+				System.err.println("Symbole " + sym.getName() + " non déclaré");
+			}
+			throw new Exception("Variables non déclarés");
+		}
+	}
 
-	public Noeud createAffect(String idf, Noeud n) {
-		Noeud n_ret = null;
+	public Affectation createAffect(String idf, Noeud n) {
+		Affectation n_ret = null;
 		//il met variable dans T..
 		Noeud n_g = new Variable(idf);
 		Noeud n_d = n;
@@ -82,18 +79,66 @@ action code {:
 		return n_ret;
 	}
 
-	public Noeud defVar(Type t, String idf, Noeud n) {
-		Symbole s = new Symbole(idf, t, getLastScope());
-		tds.insert(idf, getLastScope(), s);
-
-		Noeud n_ret = null;
-		if (n != null) {
-			n_ret = createAffect(idf, n);
-		} else {
-			// valeur par défaut
-			n_ret = createAffect(idf, new Constante(0));
+	public Symbole addVarToTDS(Type t, String idf, boolean temp, boolean isParam) throws Exception{
+		Symbole s;
+		Definition d  = new Definition(idf, getLastScope());
+		String type;
+		if(isParam){
+			type = "parametre";
+		}else{
+			if(getLastScope() == ScopeGlobal.getInstance())
+				type ="variable";
+			else
+				type = "local";
 		}
-		return n_ret;
+
+		if (tds.hasSymbole(d)) {
+			s = tds.getSymbole(d);
+			if(t != s.getType())
+				throw new Exception("Variable "+idf+" a été appelé avec un autre type de données");
+			if(!temp){
+				if(s.get("undeclared") == null)
+					throw new Exception("Variable "+idf+" a été déclaré deux fois");
+				s.remove("undeclared");
+				undeclared.remove(s);
+				if(getLastScope() == ScopeGlobal.getInstance()){
+					s.add("type", "local");
+					tds.remove(d);
+					tds.insert(idf, getLastScope(), s);
+				}
+			}
+		}else{
+			s = new Symbole(idf, t, getLastScope(),type);
+			tds.insert(idf, getLastScope(), s);
+		}
+		if(temp){
+			s.add("undeclared", "true");
+			undeclared.add(s);
+		}
+		if(isParam){
+			s.add("type", "parametre");
+			s.add("rang", ""+getLastScope().getRangParam());
+			getLastScope().addRangParam();
+		}
+		return s;
+	}
+
+	public void defVar(Type t, String idf, Constante n, boolean temp) throws Exception{
+		Symbole s = addVarToTDS(t, idf, temp, false);
+		if(!temp){
+			Noeud n_ret = null;
+			if (n != null) {
+			
+				n_ret = createAffect(idf, n);
+				s.add("valeur defaut", ""+n.getValue());
+			} else {
+				// valeur par défaut
+				n_ret = createAffect(idf, new Constante(0));
+				s.add("valeur defaut",""+0);
+			}
+			s.add("rang", ""+getLastScope().getRangVar());
+			getLastScope().addRangVar();
+		}
 	}
 
 	public Noeud insertionFgFd(Noeud o, Noeud f, Noeud a) {
@@ -101,56 +146,102 @@ action code {:
 		o.InsererFilsDroit(a);
 		return o;
 	}
-
-	public void hasDoubleDef (Noeud var) throws Exception{
-	//meme nom et meme scope -> appel sur Symbole plutot que Noeud ? non Def =D
-		if (tds.hasSymbole(var.getIdf(), getLastScope())) {
-			throw new Exception ("Variable "+var.getIdf() +" déja définie");
-		}
-	}
 	
 	public void existVar (String idf) throws Exception{
 		if (!tds.hasSymbole(new Definition(idf,getLastScope()))) {
 			if (!tds.hasSymbole(new Definition(idf,ScopeGlobal.getInstance()))) {
-				throw new Exception ("Variable "+ idf +" non définie");
+				throw new Exception ("Variable "+ idf +" non d�finie");
 			}
 		}
 	}
 	
-	public void isFonctionInt (Noeud n) throws Exception{
-		
-		if (tds.hasSymbole(n.getIdf(), ScopeGlobal.getInstance())) {
-			Symbole s = tds.getSymbole(n.getIdf(), ScopeGlobal.getInstance());
-			 throw new Exception ("Fonction "+ n.getIdf() +" mauvais typage");
+	public void isFonctionInt (Noeud n, ArrayList<Noeud> param) throws Exception{
+		Symbole s;
+		if(n.getIdf() != "read"){
+			if (!tds.hasSymbole(n.getIdf(), ScopeGlobal.getInstance())) {
+				this.defFonction(Type.INT, n.getIdf(), null, param, true);		
+			}else{
+				s = tds.getSymbole(n.getIdf(), ScopeGlobal.getInstance());
+				if(s.getType() != Type.INT)
+				 	throw new Exception ("Fonction "+ n.getIdf() +" mauvais typage");
+			}
 		}
 	}
 	
+	public void isVarInt (Noeud n) throws Exception{
+		Symbole s;
+		if (!tds.hasSymbole(n.getIdf(), getLastScope()) && !tds.hasSymbole(n.getIdf(), ScopeGlobal.getInstance())) {
+			this.addVarToTDS(Type.INT, n.getIdf(), true, false);
+		}else{
+			s = tds.getSymbole(n.getIdf(), getLastScope());
+			if(s.getType() != Type.INT)
+			 	throw new Exception ("Variable "+ n.getIdf() +" mauvais typage");
+		}
+	}
+
 	public void  verifNbParam(String idf, ArrayList<Noeud> p) throws Exception {
-	Definition d = new Definition(idf,ScopeGlobal.getInstance());
+		Definition d = new Definition(idf,ScopeGlobal.getInstance());
 		if (tds.hasSymbole(d)) {
 			Symbole s = tds.getSymbole(d);
 			
-			String nbparam = s.getValues().get("nbParam");
-			if (Integer.parseInt(nbparam)==p.size()) { 
+			String nbparam = s.getValues().get("nbParam"); 
+			if (Integer.parseInt(nbparam)!=p.size()) { 
 				 throw new Exception ("Fonction "+ idf +" mauvais nombre paramètres");
 			}
 		}
 	}
 
-	public void defFonction(Type t, String n, ArrayList<Noeud> l, ArrayList<Noeud> param) {
-		//mettre a jour values du noeud => nb de param
+	public void defFonction(Type t, String n, ArrayList<Noeud> fils, ArrayList<Noeud> param, boolean temp) throws Exception{
 		Noeud noeud_f = new Fonction(n);
-		Symbole s = new Symbole(n, t, ScopeGlobal.getInstance());
+		Definition d = new Definition(n,ScopeGlobal.getInstance());
+		Symbole s;
+
+		if (tds.hasSymbole(d)) {
+			s = tds.getSymbole(d);
+			if(t != s.getType())
+				throw new Exception("Fonction "+n+" a été appelé avec un autre type de données");
+			if(param.size() != Integer.parseInt(s.get("nbParam")))
+				throw new Exception("Nombre incorrect de paramètres pour " + n);
+			if(!temp){
+				if(s.get("undeclared") == null)
+					throw new Exception("Fonction "+n+" a été déclaré deux fois");
+				s.remove("undeclared");
+				undeclared.remove(s);
+				s.setScope(getLastScope());
+			}
+		}else{
+			s = new Symbole(n, t, getLastScope());
+			tds.insert(n, ScopeGlobal.getInstance(), s);
+		}
 		if(param != null)
 			s.add("nbParam", ""+param.size());
 		else 
 			s.add("nbParam", "0");
-		Set cles = tds.getTable().keySet();
-		Iterator it = cles.iterator();
-		noeud_f.InsererListeFils(l);
-		master.InsererUnFils(noeud_f);
 
-		tds.insert(n, ScopeGlobal.getInstance(), s);
+		s.add("type", "fonction");
+		if(!temp){
+			for (Noeud noeud : param) {	
+				Symbole pa = addVarToTDS(Type.INT, noeud.getIdf(), false, true);
+			}
+			noeud_f.InsererListeFils(fils);
+			master.InsererUnFils(noeud_f);
+
+			Set cles = tds.getTable().keySet();
+			Iterator it = cles.iterator();
+			int nbVar=0;	
+			for (Map.Entry<Definition, Symbole> entry : tds.getTable().entrySet()) {	
+				Definition key = entry.getKey();
+				Symbole sym = tds.getSymbole(key);
+				if (key.getScope().equals(getLastScope()) && sym.get("type") == "local") {
+					nbVar++;
+				}
+			}
+			s.add("nbVariable", ""+nbVar);
+
+		}else{
+			s.add("undeclared", "true");
+			undeclared.add(s);
+		}
 	}
 
 	public Noeud createIf(Noeud b, ArrayList<Noeud> l, ArrayList<Noeud> c) {
@@ -164,9 +255,9 @@ action code {:
 	}
 
 	public Noeud createBool(Noeud e, Noeud bo, Noeud be) {
-		e.InsererFilsGauche(bo);
-		e.InsererFilsDroit(be);
-		return e;
+		bo.InsererFilsGauche(e);
+		bo.InsererFilsDroit(be);
+		return bo;
 	}
 
 	public Noeud createBoucle(Noeud be, ArrayList<Noeud> l) {
@@ -177,8 +268,16 @@ action code {:
 		return n_ret;
 	}
 
-	public Noeud createExpression() {
-		return null;
+	public void defMultiVar(Type t, String idf, Constante n, HashMap<Variable,Noeud> l) throws Exception {
+		defVar(t, idf, n, false);
+
+		Set cles = l.keySet();
+		Iterator it = cles.iterator();
+		
+		for (Map.Entry<Variable, Noeud> entry : l.entrySet()) {
+			Variable key = entry.getKey();
+			defVar(t, key.getIdf(), n, false);
+		}
 	}
 	
 :}
@@ -195,11 +294,12 @@ terminal IF, ELSE, WHILE, INFERIEUR, SUPERIEUR;
 terminal Integer CONST;
 
 non terminal liste_definition, definition, definition_var, definition_fonction;
-non terminal ArrayList<Noeud> liste,conditionelse,parametres;
+non terminal ArrayList<Noeud> liste,conditionelse, parametres;
 non terminal Noeud affectation, ret;
-non terminal Noeud appel, facteur, atome, value;
+non terminal Noeud appel, facteur, atome;
+non terminal Constante value;
 non terminal Type type; /* Type de donnÃ©es */
-non terminal vars;
+non terminal HashMap<Variable,Noeud> vars;
 non terminal Noeud parametre;
 non terminal Noeud expression;
 non terminal Noeud operateur1, operateur2;
@@ -207,53 +307,62 @@ non terminal Noeud boolean_expression, boolean_operator;
 non terminal Noeud condition, iteration;
 non terminal Noeud command;
 
-start with liste_definition ;
+non terminal boot;
+
+
+start with boot;
+
+boot ::= liste_definition {: verifierUndeclared(); :};
 
 liste_definition ::= definition liste_definition
 	|
 	;
 
-liste  ::= command:c liste:l {: if (l==null) {l=new ArrayList<Noeud>();} l.add(c); RESULT = l; :}
+liste  ::= command:c liste:l {: if (l==null) {l=new ArrayList<Noeud>();} l.add(0, c); RESULT = l; :}
 	| {: RESULT = new ArrayList<Noeud>(); :}
 	;
 
 /*------debut-------*/
-command ::= definition | affectation:af {: RESULT=af; :} | ret:r {: RESULT=r; :} | condition:c {: RESULT=c; :} | iteration:i {: RESULT=i; :} | appel:a {: RESULT=a; :} PV
+command ::= definition {: RESULT=new Container(); :}| affectation:af {: RESULT=af; :} | ret:r {: RESULT=r; :} | condition:c {: RESULT=c; :} | iteration:i {: RESULT=i; :} | appel:a {: RESULT=a; :} PV
     ;
     
 definition ::= definition_var | definition_fonction
 	;
 
-definition_var ::= type:t IDF:n value:v vars PV
-{: defVar(t,n,v); :}
+definition_var ::= type:t IDF:n value:v vars:l PV
+{: if (l==null) {defVar(t,n,v, false); } else { defMultiVar(t,n,v,l); } :}
 	;
 
 definition_fonction ::=  type:t IDF:n PO {: newScope(); :} parametres:p PF  AO liste:l AF
-{:	defFonction(t,n,l,p); deleteScope();:}
+{: defFonction(t,n,l,p, false); deleteScope();:}
 	;
              
-vars ::= V IDF:i value:v vars
+vars ::= V IDF:i value:v vars:l {: Variable var = new Variable(i); 
+if (l==null) { l = new HashMap<Variable,Noeud>(); } l.put(var,v); RESULT=l; :}
 		|
 	; 
-	
+	/*
 value ::= E expression:e {: RESULT = e; :} |   {: RESULT = null; :}
 	;
+	*/
+value ::= E CONST:c {: RESULT = new Constante(c); :} | E operateur1:o CONST:c {: RESULT = new Constante(Integer.parseInt(o.getIdf()+c)); :}| {: RESULT = null; :}
+	;	
 	
 type ::= VOID {: RESULT = Type.VOID; :}
 	   | INT {: RESULT = Type.INT; :} 
 	;
 	
-appel ::= IDF:idf PO parametres:p PF {:  verifNbParam(idf,p); RESULT = new Appel(idf, p); :}
-		| READ PO PF //{: RESULT = new Noeud(Noeud.READ) :}
-		| WRITE PO parametre PF
+appel ::= IDF:idf PO parametres:p PF {:  verifNbParam(idf,p); Noeud n = new Appel(idf); n.InsererListeFils(p); RESULT = n; :}
+		| READ PO PF {: RESULT = new Read(); :}
+		| WRITE PO parametre:p PF  {: Noeud n = new Write(); n.InsererUnFils(p); RESULT = n; :}
 	;
 	
-parametres ::= parametre:p V parametres:l {: if (l==null) {l=new ArrayList<Noeud>();} l.add(p); RESULT = l; :} 
-		| parametre:p {: ArrayList<Noeud> l=new ArrayList<Noeud>(); l.add(p); RESULT = l; :}
+parametres ::= parametre:p V parametres:l {: if (l==null) {l = new ArrayList<Noeud>(); } l.add(0, p); RESULT = l; :} 
+		| parametre:p {: ArrayList<Noeud> l = new ArrayList<Noeud>(); l.add(0, p); RESULT = l; :}
 		| {: RESULT = new ArrayList<Noeud>(); :}
 	;
 	
-parametre ::= type:t IDF:idf {: RESULT = new Variable(idf); :} | expression:e {: RESULT=e; :} 
+parametre ::= type:t IDF:idf  {: Variable var = new Variable(idf); RESULT=var; :} | expression:e {: RESULT=e; :} 
 	;
 
 affectation ::= IDF:idf E expression:e PV {: existVar(idf);Noeud n=createAffect(idf,e);RESULT=n; :}
@@ -267,8 +376,8 @@ facteur ::= facteur:f operateur2:o atome:a {: RESULT = insertionFgFd(o,f,a); :} 
 	;
 	
 atome ::= CONST:c {: RESULT = new Constante(c); :}
-		| IDF:s {: RESULT = new Variable(s); :}
-		| appel:a {: isFonctionInt (a); RESULT = a; :}
+		| IDF:s {: Variable var= new Variable(s); isVarInt(var); RESULT = var; :}
+		| appel:a {: isFonctionInt (a, a.getListeFils()); RESULT = a; :}
 		| PO expression:a PF {: RESULT = a; :}
 	;
 	

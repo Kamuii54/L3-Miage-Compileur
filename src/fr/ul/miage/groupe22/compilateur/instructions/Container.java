@@ -23,5 +23,10 @@ public class Container extends Noeud{
 		}
 		return resultat;
 	}
+	
+	@Override
+	public String toString() {
+		return " -Container : "+ super.toString()+ " }- ";
+	}
 
 }

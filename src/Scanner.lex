@@ -16,7 +16,7 @@ import java_cup.runtime.Symbol;
 %public
 %cupsym ParserSym
 %cup
-%debug
+/* %debug */
 
 /* macros */
 SEP      =   [ \t]

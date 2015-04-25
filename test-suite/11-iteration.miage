@@ -1,5 +1,5 @@
 /*
- * Test génération de code : 
+ * Test gï¿½nï¿½ration de code : 
  * boucle
  */
 
@@ -8,6 +8,7 @@ void main(){
 	i = 0; j = 0;
 	while (i <3){
 		j = j + i;
+		i = i + 1;
 	}
  }
 

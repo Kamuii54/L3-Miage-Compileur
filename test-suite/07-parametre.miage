@@ -2,14 +2,14 @@
  * Test g�n�ration de code : une fonction (appel)
  */
 
-int i =0;
-int j = 0;
+int i =3;
+int j = 4;
 
 int f(int a, int b){
 	int x, y, z;
-	return 0;
+	return a+b;
  }
 
 void main(){
-	i = f(i,j); /*tester ceci*/
+	i = 2*f(i,j); /*tester ceci*/
 }

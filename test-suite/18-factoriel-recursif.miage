@@ -1,16 +1,16 @@
 /*
  * Test g�n�ration de code : 
- * recursivit�
+ * Factoriel recursif
  */
 int x ;
 
 int f(int n){
-	if (n < 1){
-		return 0;
+	if (n==1){
+		return 1;
 	}
-	return (n+f(n-1));
+	return (n*f(n-1));
 }
 
 void main(){
-	x = f(5);
+	x = f(4);
 }

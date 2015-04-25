@@ -16,16 +16,20 @@ public class Affectation extends Noeud {
 		
 		Symbole var = tds.getSymbole(idfFG, currentScope);
 		
+		resultat += "\tPOP(r0)\n" ;
 		
-		if (var.getScope().equals(ScopeGlobal.getInstance())) {
-			resultat += "POP(r0)\n" 
-					 +	"ST(r0," + idfFG  + ")\n";
-		} else {
-			int valeur = Integer.parseInt(var.values.get("rang"));
-			int nbOctet = (1 + valeur) * 4;
-			resultat += "PUTFRAME(r0," + nbOctet + ")\n";
+		if(var.getScope() == ScopeGlobal.getInstance()){
+			resultat += "\tST(R0, " + idfFG + ") \n";
+		}else if(var.get("type") == "parametre"){
+			resultat += "\tPUTFRAME( R0, (2+"+var.get("rang")+")*(-4),)\n";
+		}else{
+			resultat += "\tPUTFRAME( R0, (1+"+var.get("rang")+")*(4))\n";
 		}
 		return resultat;
 	}
-
+	
+	@Override
+	public String toString() {
+		return " -Affectation : "+ super.toString()+ " }- ";
+	}
 }

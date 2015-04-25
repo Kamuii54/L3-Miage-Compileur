@@ -8,6 +8,11 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 public abstract class Noeud {
 
+	@Override
+	public String toString() {
+		return ""+listeFils;
+	}
+
 	private static int next_id = 0;
 
 	private int id = 0;
@@ -82,4 +87,36 @@ public abstract class Noeud {
 	public void setListeFils(ArrayList<Noeud> listeFils) {
 		this.listeFils = listeFils;
 	}
+	
+	public void affiche(int rang, boolean last, ArrayList<Boolean> barre){
+		String res = "";
+		for(int i = 0; i < rang-1; i++){
+			res += barre.get(i) ? "│  " : "   ";
+		}
+		if(rang > 0)
+			if(last)
+				res += "└ ";
+			else 
+				res += "├ ";
+		System.out.println(res + this.getClass().getSimpleName() + " : " + this.info());
+		for(int i = 0; i < listeFils.size() ; i++){
+			if(i == listeFils.size()-1){
+				barre.add(false);
+				listeFils.get(i).affiche(rang+1, true, barre);
+				barre.remove(barre.size()-1);
+			}else{
+				barre.add(true);
+				listeFils.get(i).affiche(rang+1, false, barre);
+				barre.remove(barre.size()-1);
+
+			}
+		}
+	}
+
+
+	public String info() {
+		return "";
+	}
+
+
 }

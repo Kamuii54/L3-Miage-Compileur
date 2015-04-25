@@ -22,16 +22,18 @@ public class Main {
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		long time = System.currentTimeMillis();
-		FileInputStream fis = new FileInputStream("test-suite/06-local.miage");
+		FileInputStream fis = new FileInputStream("test-suite/18-factoriel-recursif.miage");
 		ParserCup parser = new ParserCup(new Yylex(fis));
 		try {
 			parser.parse();
-			parser.affiche();
+			//parser.affiche();
+			//System.out.println("ok : \n\n\n"+parser.generate());
+			System.out.println(parser.generate());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("...Erreur de syntaxe ");
 		}
-		System.out.println("Temps : " + (System.currentTimeMillis() - time) + " ms");
+		//System.out.println("Temps : " + (System.currentTimeMillis() - time) + " ms");
 		
 	}
 }

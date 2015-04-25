@@ -10,11 +10,16 @@ public class Division extends Noeud{
 		String resultat ="";
 		resultat += this.getFilsGauche().genererCode(tds, currentScope);
 		resultat += this.getFilsDroit().genererCode(tds, currentScope);
-		resultat += "POP(r2)\n"
-				+ "POP(r1)\n"
-				+ "DIV(r1,r2,r3)\n"
-				+ "PUSH(r3)\n";
+		resultat += "\tPOP(r2)\n"
+				+ "\tPOP(r1)\n"
+				+ "\tDIV(r1,r2,r3)\n"
+				+ "\tPUSH(r3)\n";
 		return resultat;
+	}
+	
+	@Override
+	public String toString() {
+		return " -Division : "+ super.toString()+ " }- ";
 	}
 
 }

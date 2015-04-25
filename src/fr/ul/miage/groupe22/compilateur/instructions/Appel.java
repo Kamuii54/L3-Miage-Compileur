@@ -23,17 +23,22 @@ public class Appel extends Noeud {
 		String resultat = "";
 		Symbole sym = tds.getSymbole(getIdf(), currentScope);
 		int nbAllocate = Integer.parseInt(sym.get("nbParam"));
-		resultat += "ALLOCATE(1)";
 
+		if(sym.getType() == Type.INT)
+			resultat += "\tALLOCATE(1) \n";
+		else
+			resultat += "\tALLOCATE(0) \n";
+		
 		for (int i = 0; i < this.getListeFils().size(); i++) {
 			resultat += this.getNoeud(i).genererCode(tds, currentScope);
 		}
-
-		tds.pushCallStack(sym);
-		resultat += "CALL(" + getIdf() + ")"
-				+ "DEALLOCATE(" + nbAllocate + ")";
-		tds.popCallStack();
+		resultat += "\tCALL(FUNC_" + getIdf() + ") \n"
+				+ "\tDEALLOCATE(" + nbAllocate + ") \n";
 		return resultat;
 	}
-
+	
+	@Override
+	public String toString() {
+		return " -Appel : "+ super.toString()+ " }- ";
+	}
 }

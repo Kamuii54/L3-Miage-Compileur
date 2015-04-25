@@ -13,7 +13,20 @@ public class Constante extends Noeud {
 
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
-		return 	"CMOVE(" + this.valeur + ", r0)\n" + "PUSH(r0)\n";
+		return 	"\tCMOVE(" + this.valeur + ", r0)\n" + "\tPUSH(r0)\n";
+	}
+	
+	@Override
+	public String toString() {
+		return " -Constante : "+ super.toString()+ " }- ";
+	}
+	
+	@Override
+	public String info(){
+		return ""+this.valeur;
 	}
 
+	public int getValue() {
+		return this.valeur;
+	}
 }

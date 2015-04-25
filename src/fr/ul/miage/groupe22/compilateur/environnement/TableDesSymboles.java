@@ -58,4 +58,12 @@ public class TableDesSymboles {
 	public Symbole popCallStack(){
 		return this.callStack.pop();
 	}
+
+	public void remove(Definition d) {
+		this.table.remove(d);
+	}
+
+	public Symbole peekCallStack() {
+		return this.callStack.peek();
+	}
 }
