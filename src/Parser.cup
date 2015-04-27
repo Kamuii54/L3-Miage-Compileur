@@ -23,7 +23,7 @@ import java.util.HashSet;
 parser code {:
 	
 	/**
-	* Methode affiche : Affichage de la Table Des Symbols
+	* Affichage de la Table Des Symboles
 	*/
 	public void affiche() {
 		action_obj.master.affiche(0, false, new ArrayList<>());
@@ -31,8 +31,8 @@ parser code {:
 	}
 	
 	/**
-	* Methode generate : Genere le code du noeud principal ( arbre )
-	@return String : code genere
+	* Genere le code du noeud principal ( arbre )
+	@return code genere
 	*/
 	public String generate() {
 		return action_obj.master.genererCode(action_obj.tds,ScopeGlobal.getInstance());
@@ -54,15 +54,15 @@ action code {:
 	public Stack<Scope> scopes = new Stack<>();
 
 	/**
-	* Methode newScope : Ajoute une nouvelle portee a la pile
+	* Ajoute une nouvelle portee a la pile
 	*/
 	public void newScope() {
 		scopes.push(new Scope());
 	}
 	
 	/**
-	* Methode getLastScope 
-	* @return Scope : portee actuel de l'analyse
+	*
+	* @return portee actuel de l'analyse
 	*/
 	public Scope getLastScope() {
     	if (scopes.isEmpty()) {
@@ -72,7 +72,7 @@ action code {:
 	}
 
 	/*
-	* Methode deleteScope : Supprime la derniere portee
+	* Supprime la derniere portee
 	* @return Scope
 	*/
 	public Scope deleteScope() {
@@ -80,7 +80,7 @@ action code {:
 	}
 
 	/**
-	* Methode verifierUndeclared
+	* 
 	* Verifie si des variables n ont pas ete declares
 	*/
 	public void verifierUndeclared() throws Exception {
@@ -95,10 +95,10 @@ action code {:
 	}
 
 	/**
-	* Methode createAffect
-	* @param idf : String : nom de la variable
-	* @param n : Noeud : noeud expression a affecter a la variable
-	* @return Affectaction : noeud correspondant
+	* 
+	* @param idf nom de la variable
+	* @param n noeud expression a affecter a la variable
+	* @return noeud correspondant
 	*/
 	public Affectation createAffect(String idf, Noeud n) {
 		Affectation n_ret = null;
@@ -112,12 +112,12 @@ action code {:
 	}
 
 	/**
-	* Methode addVartoTDS : Ajoute une variable dans la table des symboles
-	* @param t : Type : type de la variable
-	* @param idf : String : nom de la variable
-	* @param temp : boolean : indique si la variable temporaire donc non défini
-	* @param isParam : boolean : indique si la variable est un paramètre
-	* @return Symbole : symbole ajout� au TDS
+	* Ajoute une variable dans la table des symboles
+	* @param t type de la variable
+	* @param idf nom de la variable
+	* @param temp indique si la variable temporaire donc non défini
+	* @param isParam indique si la variable est un paramètre
+	* @return symbole ajout� au TDS
 	*/
 	public Symbole addVarToTDS(Type t, String idf, boolean temp, boolean isParam) throws Exception{
 		Symbole s;
@@ -172,11 +172,11 @@ action code {:
 	}
 
 	/**
-	* Methode defVar : Definit une variable en fonction d une constante
-	* @param t : Type : type de la variable
-	* @param idf : String : nom de la variable
-	* @param n : Constante : valeur de la variable
-	* @param temp : boolean : indique si la variable temporaire donc non défini
+	* Definit une variable en fonction d une constante
+	* @param t type de la variable
+	* @param idf nom de la variable
+	* @param n valeur de la variable
+	* @param temp indique si la variable temporaire donc non défini
 	*/
 	
 	public void defVar(Type t, String idf, Constante n, boolean temp) throws Exception{
@@ -198,11 +198,11 @@ action code {:
 	}
 	
 	/**
-	* Methode insertionFgFd : insere un fils gauche et droit dans un noeud
-	* @param o : Noeud : noeud pere
-	* @param f : Noeud : fils gauche
-	* @param a : Noeud : fils droit
-	* @return Noeud : mis a jour
+	* insere un fils gauche et droit dans un noeud
+	* @param o noeud pere
+	* @param f fils gauche
+	* @param a fils droit
+	* @return mis a jour
 	*/
 	
 	public Noeud insertionFgFd(Noeud o, Noeud f, Noeud a) {
@@ -212,8 +212,8 @@ action code {:
 	}
 	
 	/**
-	*Methode existVar : Verifie si une variable est contenu dans le tds
-	*@param idf : nom de la variable
+	* Verifie si une variable est contenu dans le tds
+	*@param idf nom de la variable
 	*/
 	
 	public void existVar (String idf) throws Exception{
@@ -225,9 +225,9 @@ action code {:
 	}
 	
 	/**
-	* Methode isFonctionInt : Verifie si une fonction est de type INT
-	* @param n : Noeud de la fonction
-	* @param param : Liste des parametres de la fonction
+	* Verifie si une fonction est de type INT
+	* @param n Noeud de la fonction
+	* @param param Liste des parametres de la fonction
 	*/
 	
 	public void isFonctionInt (Noeud n, ArrayList<Noeud> param) throws Exception{
@@ -244,8 +244,8 @@ action code {:
 	}
 	
 	/**
-	* Methode isVarInt : Verifie si une variable est de type INT
-	* @param n : Noeud de la variable
+	* Verifie si une variable est de type INT
+	* @param n Noeud de la variable
 	*/
 	
 	public void isVarInt (Noeud n) throws Exception{
@@ -260,9 +260,9 @@ action code {:
 	}
 
 	/**
-	* Methode verifNbParam : Verifie que le nombre de parametres d'un appel correspondant a la fonction
-	* @param idf : nom de la fonction
-	* @param p : ArrayList<Noeud> : liste des parametres d'appel
+	* Verifie que le nombre de parametres d'un appel correspondant a la fonction
+	* @param idf nom de la fonction
+	* @param p liste des parametres d'appel
 	*/
 	public void  verifNbParam(String idf, ArrayList<Noeud> p) throws Exception {
 		Definition d = new Definition(idf,ScopeGlobal.getInstance());
@@ -277,13 +277,13 @@ action code {:
 	}
 	
 	/**
-	* Methode defFonction : Definit une fonction dans le tds,
+	* Definit une fonction dans le tds,
 	* Si la fonction a été défini temporairement avant supprime l'attribut undeclared et mets à jour ses attributs si temp est à faux
-	* @param t : Type de la fonction
-	* @param n : noeud de la fonction
-	* @param fils : ArrayList<Noeud> : liste des sous instructinos de la fonction
-	* @param param : ArrayList<Noeud> : liste des parametres
-	* @param temp : fonction temporaire donc non défini
+	* @param t Type de la fonction
+	* @param n noeud de la fonction
+	* @param fils liste des sous instructinos de la fonction
+	* @param param liste des parametres
+	* @param temp fonction temporaire donc non défini
 	*/
 	public void defFonction(Type t, String n, ArrayList<Noeud> fils, ArrayList<Noeud> param, boolean temp) throws Exception{
 		Noeud noeud_f = new Fonction(n);
@@ -339,10 +339,10 @@ action code {:
 	}
 
 	/**
-	* Methode createIf : cree un noeud de type If
-	* @param b : Noeud conditionnel
-	* @param l : ArrayList<Noeud> : clause if
-	* @param c : ArrayList<Noeud> : clause else
+	* cree un noeud de type If
+	* @param b Noeud conditionnel
+	* @param l clause if
+	* @param c clause else
 	* @preturn Noeud : noeud "if"
 	*/
 	
@@ -357,11 +357,11 @@ action code {:
 	}
 
 	/**
-	* Methode createBool : cree un noeud de type booleen
-	* @param e : operateur booleen
-	* @param bo : booleen gauche
-	* @param be : booleen droit
-	* @return Noeud : noeud expression booleenne
+	* cree un noeud de type booleen
+	* @param e operateur booleen
+	* @param bo booleen gauche
+	* @param be booleen droit
+	* @return noeud expression booleenne
 	*/
 
 	public Noeud createBool(Noeud e, Noeud bo, Noeud be) {
@@ -372,10 +372,10 @@ action code {:
 	}
 
 	/**
-	* Methode createBoucle : cree un noeud de type boucle
-	* @param be : Noeud conditionnelle de la boucle
-	* @param l : ArrayList<Noeud> : liste d'instructions de la boucle
-	* @return Noeud : noeud "boucle"
+	* cree un noeud de type boucle
+	* @param be Noeud conditionnelle de la boucle
+	* @param l liste d'instructions de la boucle
+	* @return noeud "boucle"
 	*/
 	
 	public Noeud createBoucle(Noeud be, ArrayList<Noeud> l) {
@@ -387,11 +387,11 @@ action code {:
 	}
 
 	/**
-	* Methode defMultiVar : Definit une liste de variables
-	* @param t : Type : type des variable
-	* @param idf : String : nom de la premiere variable
-	* @param n : Constante : valeur de la premiere variable
-	* @param l : HashMap<Variable,Noeud> : liste des variables/valeurs associ�es
+	* Definit une liste de variables
+	* @param t type des variable
+	* @param idf nom de la premiere variable
+	* @param n valeur de la premiere variable
+	* @param l liste des variables/valeurs associ�es
 	*/
 	
 	public void defMultiVar(Type t, String idf, Constante n, HashMap<Variable,Noeud> l) throws Exception {

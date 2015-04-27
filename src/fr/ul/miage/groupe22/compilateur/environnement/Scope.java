@@ -9,22 +9,22 @@ package fr.ul.miage.groupe22.compilateur.environnement;
 public class Scope {
 	
 	/**
-	 * Attribut next_id : static int : id du prochain Scope
+	 * Id du prochain Scope
 	 */
 	private static int next_id = 1;
 	
 	/**
-	 * Attribut id : int : id du Scope
+	 * Id du Scope
 	 */
 	private int id;
 	
 	/**
-	 * Attribut rangVar : int : rang dans l'ordre de declaration des variables
+	 * Rang dans l'ordre de declaration des variables
 	 */
 	private int rangVar = 1;
 	
 	/**
-	 * Attribut rangParam : int : rang dans l'ordre de declaration des parametres
+	 * Rang dans l'ordre de declaration des parametres
 	 */
 	private int rangParam = 1;
 	
@@ -37,15 +37,15 @@ public class Scope {
 	}
 	
 	/**
-	 * Methode getRangVar
-	 * @return int : rang de la variable
+	 * 
+	 * @return rang de la variable
 	 */
 	public int getRangVar(){
 		return this.rangVar;
 	}
 	
 	/**
-	 * Methode addRangVar
+	 * 
 	 * Ajoute un rang a la variable
 	 */
 	public void addRangVar(){
@@ -53,15 +53,15 @@ public class Scope {
 	}
 	
 	/**
-	 * Methode getRangParam
-	 * @return int : rang du parametre
+	 * 
+	 * @return rang du parametre
 	 */
 	public int getRangParam(){
 		return this.rangParam;
 	}
 	
 	/**
-	 * Methode addRangParam
+	 * 
 	 * Ajoute un rang au parametre
 	 */
 	public void addRangParam(){
@@ -69,8 +69,8 @@ public class Scope {
 	}
 	
 	/**
-	 * Methode hashCode
-	 * @return int : hashcode correspondant au scope
+	 * 
+	 * @return hashcode correspondant au scope
 	 */
 	@Override
 	public int hashCode() {
@@ -81,8 +81,8 @@ public class Scope {
 	}
 
 	/**
-	 * Methode equals : compare deux scope
-	 * @return boolean
+	 * compare deux scope
+	 * @return Vrai si les deux éléments sont égaux
 	 */
 	@Override
 	public boolean equals(Object obj) {

@@ -19,8 +19,9 @@ import fr.ul.miage.groupe22.compilateur.generated.Yylex;
 public class Main {
 
 	/**
-	 * @param args
-	 * @throws FileNotFoundException 
+	 * Lance le programme
+	 * @param args pamaètres donné au programme
+	 * @throws FileNotFoundException Fichier d'entrée non trouvé
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		boolean debug = false;

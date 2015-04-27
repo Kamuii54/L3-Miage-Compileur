@@ -6,14 +6,14 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 /**
  * @author Groupe 22
- * Classe Addition : Correspond � un noeud de type Return dans l'arbre
+ *  Correspond � un noeud de type Return dans l'arbre
  */
 public class Return extends Noeud {
 
 	/**
-	 * Methode genererCode : genere le code assembleur correspondant au noeud
-	 * @param tds : tables des symboles contenant variables/fonctions
-	 * @param currentScope : correpond � l'emplacement de g�n�ration du code
+	 * genere le code assembleur correspondant au noeud
+	 * @param tds tables des symboles contenant variables/fonctions
+	 * @param currentScope correpond � l'emplacement de g�n�ration du code
 	 */
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
@@ -29,7 +29,7 @@ public class Return extends Noeud {
 	}
 	
 	/**
-	 * Methode toString : Affichage du noeud en question
+	 * Affichage du noeud en question
 	 */
 	@Override
 	public String toString() {

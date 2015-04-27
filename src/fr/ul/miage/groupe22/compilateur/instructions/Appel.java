@@ -8,13 +8,13 @@ import fr.ul.miage.groupe22.compilateur.environnement.Type;
 
 /**
  * @author Groupe 22
- * Classe Appel : Correspond à un noeud de type Appel dans l'arbre
+ *  Correspond à un noeud de type Appel dans l'arbre
  */
 public class Appel extends Noeud {
 	
 	/**
 	 * Constructeur
-	 * @param idf : identifiant de la fonction appelée
+	 * @param idf identifiant de la fonction appelée
 	 */
 	public Appel(String idf){
 		super(idf);
@@ -22,8 +22,8 @@ public class Appel extends Noeud {
 
 	/**
 	 * Constructeur
-	 * @param idf : identifiant de la fonction appelée
-	 * @param fils : liste des noeuds fils associés à l'appel
+	 * @param idf identifiant de la fonction appelée
+	 * @param fils liste des noeuds fils associés à l'appel
 	 */
 	public Appel(String idf, ArrayList<Noeud> fils) {
 		super(idf);
@@ -31,9 +31,9 @@ public class Appel extends Noeud {
 	}
 
 	/**
-	 * Methode genererCode : genere le code assembleur correspondant au noeud
-	 * @param tds : tables des symboles contenant variables/fonctions
-	 * @param currentScope : correpond à l'emplacement de génération du code
+	 * genere le code assembleur correspondant au noeud
+	 * @param tds tables des symboles contenant variables/fonctions
+	 * @param currentScope correpond à l'emplacement de génération du code
 	 */
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
@@ -60,7 +60,7 @@ public class Appel extends Noeud {
 	}
 	
 	/**
-	 * Methode toString : Affichage du noeud en question
+	 * Affichage du noeud en question
 	 */
 	@Override
 	public String toString() {

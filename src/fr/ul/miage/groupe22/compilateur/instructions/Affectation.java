@@ -6,14 +6,14 @@ import fr.ul.miage.groupe22.compilateur.environnement.Symbole;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 /**
  * @author Groupe 22
- * Classe Affectation : Correspond à un noeud de type Affectation dans l'arbre
+ *  Correspond à un noeud de type Affectation dans l'arbre
  */
 public class Affectation extends Noeud {
 
 	/**
-	 * Methode genererCode : genere le code assembleur correspondant au noeud
-	 * @param tds : tables des symboles contenant variables/fonctions
-	 * @param currentScope : correpond à l'emplacement de génération du code
+	 * genere le code assembleur correspondant au noeud
+	 * @param tds tables des symboles contenant variables/fonctions
+	 * @param currentScope correpond à l'emplacement de génération du code
 	 */
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
@@ -37,7 +37,7 @@ public class Affectation extends Noeud {
 	}
 	
 	/**
-	 * Methode toString : Affichage du noeud en question
+	 * Affichage du noeud en question
 	 */
 	@Override
 	public String toString() {

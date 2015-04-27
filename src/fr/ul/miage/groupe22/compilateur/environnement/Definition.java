@@ -3,13 +3,13 @@ package fr.ul.miage.groupe22.compilateur.environnement;
 
 /**
  * Classe Definition
- * Correspond a la definition d'une variable/fonction, son nom associ� a sa portee
+ * Correspond a la definition d'une variable/fonction, son nom associ� a sa portee
  * @author Groupe 22
  */
 public class Definition {
 
 	/**
-	 * Methode toString
+	 * 
 	 * Affiche la definition du noeud
 	 */
 	@Override
@@ -29,8 +29,8 @@ public class Definition {
 
 	/**
 	 * Cosntruction Definition 
-	 * @param idf : identifiant de la variable/fonction
-	 * @param scope : portee de la variable/fonction
+	 * @param idf identifiant de la variable/fonction
+	 * @param scope portee de la variable/fonction
 	 */
 	public Definition(String idf, Scope scope) {
 		this.idf = idf;
@@ -38,8 +38,8 @@ public class Definition {
 	}
 	
 	/**
-	 * Methode hashCode
-	 * @return int : hashcode correspondant a la definition
+	 * 
+	 * @return hashcode correspondant a la definition
 	 */
 	@Override
 	public int hashCode() {
@@ -51,8 +51,8 @@ public class Definition {
 	}
 
 	/**
-	 * Methode equals : Compare deux definition
-	 * @return boolean
+	 * Compare deux definition
+	 * @return Vrai si les définitions son égaux
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -77,32 +77,32 @@ public class Definition {
 	}
 
 	/**
-	 * Methode getIdentifiant
-	 * @return String : nom de la variable/fonction
+	 * 
+	 * @return nom de la variable/fonction
 	 */
 	public String getIdentifiant() {
 		return this.idf;
 	}
 
 	/**
-	 * Methode getScope
-	 * @return String : portee de la variable/fonction
+	 * 
+	 * @return portee de la variable/fonction
 	 */
 	public Scope getScope() {
 		return scope;
 	}
 
 	/**
-	 * Methode setScope
-	 * @param scope : portee de la variable/fonction
+	 * 
+	 * @param scope portee de la variable/fonction
 	 */
 	public void setScope(Scope scope) {
 		this.scope = scope;
 	}
 
 	/**
-	 * Methode setIdf
-	 * @param idf : nom de la variable/fonction
+	 * 
+	 * @param idf nom de la variable/fonction
 	 */
 	public void setIdf(String idf) {
 		this.idf = idf;

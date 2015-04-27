@@ -1,7 +1,7 @@
 package fr.ul.miage.groupe22.compilateur.environnement;
 
 /**
- * Classe ScopeGlobal h�ritant Scope
+ * Classe ScopeGlobal héritant Scope
  * Correspond a la portee global
  * @author Groupe22
  *

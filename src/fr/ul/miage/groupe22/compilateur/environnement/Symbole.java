@@ -4,40 +4,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ * Correspond a un symbole (variable/fonction) du programme avec sa portee
  * @author Groupe 22
- * Classe Symbole : Correspond a un symbole (variable/fonction) du programme avec sa portee
  */
 public class Symbole {
 
 	/**
-	 * Attribut idf : identifiant du symbole
+	 * identifiant du symbole
 	 */
 	private int idf;
 	
 	/**
-	 * Attribut idf : static int : identifiant du prochain symbole
+	 * identifiant du prochain symbole
 	 */
 	private static int next_idf=1;
 
 	/**
-	 * Attribut name : String : nom de la variable/fonction
+	 * nom de la variable/fonction
 	 */
 	private String name;
 	
 	/**
-	 * Attribut type : Type dy smybole
+	 * Type dy smybole
 	 */
 	private Type type = Type.INT;
 	
 	/**
-	 * Attribut scope : portee de la variable/fonction
+	 * portee de la variable/fonction
 	 */
 	private Scope scope;
 	
 	/**
-	 * Attribut values : Map<String,String>
-	 * Permet de stocker différentes valeurs (nb param, variable, type, valeur)
+	 * Permet de stocker diffï¿½rentes valeurs (nb param, variable, type, valeur)
 	 */
 	public Map<String, String> values = new HashMap<>();
 	
@@ -48,9 +46,9 @@ public class Symbole {
 	
 	/**
 	 * Constructeur
-	 * @param name : nom du symbole
-	 * @param scope : portee du symbole
-	 * @param values : valeurs du symbole
+	 * @param name nom du symbole
+	 * @param scope portee du symbole
+	 * @param values valeurs du symbole
 	 */
 	public Symbole(String name, Scope scope, Map<String, String> values) {
 		this.idf=next_idf++;
@@ -61,10 +59,10 @@ public class Symbole {
 
 	/**
 	 * Constructeur
-	 * @param name : nom du symbole
-	 * @param type : type du symbole
-	 * @param scope : portee du symbole
-	 * @param values : valeurs du symbole
+	 * @param name nom du symbole
+	 * @param type type du symbole
+	 * @param scope portee du symbole
+	 * @param values valeurs du symbole
 	 */
 	public Symbole(String name, Type type, Scope scope, Map<String, String> values) {
 		this.idf=next_idf++;
@@ -76,8 +74,8 @@ public class Symbole {
 
 	/**
 	 * Constructeur
-	 * @param name : nom du symbole
-	 * @param scope : portee du symbole
+	 * @param name nom du symbole
+	 * @param scope portee du symbole
 	 */
 	public Symbole(String name, Scope scope) {
 		this.idf=next_idf++;
@@ -87,9 +85,9 @@ public class Symbole {
 
 	/**
 	 * Constructeur
-	 * @param name : nom du symbole
-	 * @param type : type du symbole
-	 * @param scope : portee du symbole
+	 * @param name nom du symbole
+	 * @param type type du symbole
+	 * @param scope portee du symbole
 	 */
 	public Symbole(String name, Type type, Scope scope) {
 		this.idf=next_idf++;
@@ -100,10 +98,10 @@ public class Symbole {
 	
 	/**
 	 * Constructeur
-	 * @param name : nom du symbole
-	 * @param type : type du symbole
-	 * @param scope : portee du symbole
-	 * @param typage : type de donnée
+	 * @param name nom du symbole
+	 * @param type type du symbole
+	 * @param scope portee du symbole
+	 * @param typage type de donnï¿½e
 	 */
 	public Symbole(String name, Type type, Scope scope,String typage) {
 		this.idf=next_idf++;
@@ -115,8 +113,8 @@ public class Symbole {
 	
 
 	/**
-	 * Methode hashCode
-	 * @return int : hashcode du symbole
+	 * 
+	 * @return hashcode du symbole
 	 */
 	@Override
 	public int hashCode() {
@@ -129,7 +127,7 @@ public class Symbole {
 
 
 	/**
-	 * Methode equals : Compare deux symboles
+	 * Compare deux symboles
 	 * @return boolean
 	 */
 	@Override
@@ -155,96 +153,96 @@ public class Symbole {
 	}
 
 	/**
-	 * Methode getIdf
-	 * @return int : identifiant du symbole
+	 * 
+	 * @return identifiant du symbole
 	 */
 	public int getIdf() {
 		return idf;
 	}
 
 	/**
-	 * Methode setIdf
-	 * @param int : identifiant du symbole
+	 * 
+	 * @param idf identifiant du symbole
 	 */
 	public void setIdf(int idf) {
 		this.idf = idf;
 	}
 
 	/**
-	 * Methode getName
-	 * @return String : nom de la variable/fonction
+	 * 
+	 * @return nom de la variable/fonction
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Methode setName
-	 * @param String : nom de la variable/fonction
+	 * 
+	 * @param name nom de la variable/fonction
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Methode getType
-	 * @return Type : typage du symbole
+	 * 
+	 * @return typage du symbole
 	 */
 	public Type getType() {
 		return type;
 	}
 
 	/**
-	 * Methode setType
-	 * @param Type : typage du symbole
+	 * 
+	 * @param type typage du symbole
 	 */
 	public void setType(Type type) {
 		this.type = type;
 	}
 
 	/**
-	 * Methode getScope
-	 * @return Scope : portee du symbole
+	 * 
+	 * @return portee du symbole
 	 */
 	public Scope getScope() {
 		return scope;
 	}
 
 	/**
-	 * Methode setScope
-	 * @param Scope : portee du symbole
+	 * 
+	 * @param scope portee du symbole
 	 */
 	public void setScope(Scope scope) {
 		this.scope = scope;
 	}
 
 	/**
-	 * Methode getValues
-	 * @return Map<String, String> : ensemble des valeurs du symbole
+	 * 
+	 * @return ensemble des valeurs du symbole
 	 */
 	public Map<String, String> getValues() {
 		return values;
 	}
 
 	/**
-	 * Methode setValues
-	 * @param Map<String, String> : ensemble des valeurs du symbole
+	 * 
+	 * @param values ensemble des valeurs du symbole
 	 */
 	public void setValues(Map<String, String> values) {
 		this.values = values;
 	}
 	
 	/**
-	 * Methode add
-	 * @param key : clé de la donnee
-	 * @param value : valeur de la donee
+	 * 
+	 * @param key clÃ© de la donnee
+	 * @param value valeur de la donee
 	 */
 	public void add(String key, String value) {
 		this.values.put(key,value);
 	}
 
 	/**
-	 * Methode toString : Affichage du symbole
+	 * Affichage du symbole
 	 */
 	@Override
 	public String toString() {
@@ -253,8 +251,8 @@ public class Symbole {
 	}
 
 	/**
-	 * Methode get
-	 * @param key : cle de la donnee
+	 * 
+	 * @param key cle de la donnee
 	 * @return valeur de la donnee correspondante
 	 */
 	public String get(String key) {
@@ -262,8 +260,8 @@ public class Symbole {
 	}
 
 	/**
-	 * Methode remove : supprime valeur de la donnee correspondante
-	 * @param key : cle de la donnee
+	 * supprime valeur de la donnee correspondante
+	 * @param key cle de la donnee
 	 */
 	public void remove(String key) {
 		this.values.remove(key);

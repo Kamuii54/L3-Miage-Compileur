@@ -13,9 +13,9 @@ import fr.ul.miage.groupe22.compilateur.environnement.Type;
 public class Root extends Noeud {
 
 	/**
-	 * Methode genererCode : genere le code assembleur correspondant au noeud
-	 * @param tds : tables des symboles contenant variables/fonctions
-	 * @param currentScope : correpond à l'emplacement de génération du code
+	 * genere le code assembleur correspondant au noeud
+	 * @param tds tables des symboles contenant variables/fonctions
+	 * @param currentScope correpond à l'emplacement de génération du code
 	 */
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
@@ -42,7 +42,7 @@ public class Root extends Noeud {
 	}
 
 	/**
-	 * Methode toString : Affichage du noeud en question
+	 * Affichage du noeud en question
 	 */
 	@Override
 	public String toString() {
@@ -50,8 +50,8 @@ public class Root extends Noeud {
 	}
 	
 	/**
-	 * Methode genererData : genere le code assembleur correspondant aux declarations des variables/fonctions
-	 * @param tds : tables des symboles contenant variables/fonctions
+	 * genere le code assembleur correspondant aux declarations des variables/fonctions
+	 * @param tds tables des symboles contenant variables/fonctions
 	 */
 	private String genererData(TableDesSymboles tds) {
 		StringBuilder resultat = new StringBuilder();

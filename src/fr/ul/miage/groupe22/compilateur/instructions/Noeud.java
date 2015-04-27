@@ -12,7 +12,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 public abstract class Noeud {
 
 	/**
-	 * Methode toString : Affiche le noeud
+	 * Affiche le noeud
 	 */
 	@Override
 	public String toString() {
@@ -25,17 +25,17 @@ public abstract class Noeud {
 	private static int next_id = 0;
 
 	/**
-	 * Attribut id : int : id du noeud
+	 * id du noeud
 	 */
 	private int id = 0;
 	
 	/**
-	 * Attribut listefils : ArrayList<Noeud> : Correspond a tous les noeuds fils de ce noeud
+	 * Correspond a tous les noeuds fils de ce noeud
 	 */
 	private ArrayList<Noeud> listeFils = new ArrayList<Noeud>();
 	
 	/**
-	 * Attribut idf : String : Correspond a l'identifiant du noeud (variable par exemple)
+	 * Correspond a l'identifiant du noeud (variable par exemple)
 	 */
 	private String idf;
 	
@@ -46,7 +46,7 @@ public abstract class Noeud {
 	
 	/**
 	 * Constructeur Noeud
-	 * @param idf : String : identifiant
+	 * @param idf identifiant
 	 */
 	public Noeud(String idf) {
 		this.idf = idf;
@@ -54,31 +54,31 @@ public abstract class Noeud {
 
 
 	/**
-	 * Methode getId
-	 * @return id : id du noeud
+	 * 
+	 * @return id du noeud
 	 */
 	public int getId() {
 		return this.id;
 	}
 	
 	/**
-	 * Methode getIdf
-	 * @return idf : String : identifiant du noeud
+	 * 
+	 * @return identifiant du noeud
 	 */
 	public String getIdf(){
 		return this.idf;
 	}
 	
 	/**
-	 * Methode abstraite genererCode : genere le code assembleur correspondant au noeud
-	 * @param tds : tables des symboles contenant variables/fonctions
-	 * @param currentScope : correpond à l'emplacement de génération du code
+	 * genererCode : genere le code assembleur correspondant au noeud
+	 * @param tds tables des symboles contenant variables/fonctions
+	 * @param currentScope correpond ï¿½ l'emplacement de gï¿½nï¿½ration du code
 	 */
 	public abstract String genererCode(TableDesSymboles tds, Scope currentScope);
 	
 	/**
-	 * Methode InsererUnFils
-	 * @param fils : Noeud a ajouter
+	 * 
+	 * @param fils Noeud a ajouter
 	 */
 	public void InsererUnFils(Noeud fils)
 	{
@@ -86,8 +86,8 @@ public abstract class Noeud {
 	}
 	
 	/**
-	 * Methode InsererListeFils
-	 * @param listeFilsAjout : Liste de noeuds a ajouter
+	 * 
+	 * @param listeFilsAjout Liste de noeuds a ajouter
 	 */
 	public void InsererListeFils(ArrayList<Noeud> listeFilsAjout)
 	{
@@ -95,8 +95,8 @@ public abstract class Noeud {
 	}
 	
 	/**
-	 * Methode InsererFilsGauche
-	 * @param fils : Noeud a ajouter
+	 * 
+	 * @param filsGauche Noeud a ajouter
 	 */
 	public void InsererFilsGauche(Noeud filsGauche)
 	{
@@ -104,8 +104,8 @@ public abstract class Noeud {
 	}
 	
 	/**
-	 * Methode InsererFilsDroit
-	 * @param fils : Noeud a ajouter
+	 * 
+	 * @param filsDroit Noeud a ajouter
 	 */
 	public void InsererFilsDroit(Noeud filsDroit)
 	{
@@ -113,32 +113,32 @@ public abstract class Noeud {
 	}
 	
 	/**
-	 * Methode getListeFils
-	 * @return ArrayList<Noeud> : liste des noeuds fils
+	 * 
+	 * @return liste des noeuds fils
 	 */
 	public ArrayList<Noeud> getListeFils(){
 		return this.listeFils;
 	}
 	
 	/**
-	 * Methode getFilsGauche
-	 * @return Noeud : noeud gauche
+	 * 
+	 * @return noeud gauche
 	 */
 	public Noeud getFilsGauche() {
 		return this.listeFils.get(0);
 	}
 
 	/**
-	 * Methode getFilsDroit
-	 * @return Noeud : noeud droit
+	 * 
+	 * @return noeud droit
 	 */
 	public Noeud getFilsDroit() {
 		return this.listeFils.get(1);
 	}
 	
 	/**
-	 * Methode getNoeud
-	 * @param i : int : emplacement du noeud
+	 * 
+	 * @param i emplacement du noeud
 	 * @return Noeud
 	 */
 	public Noeud getNoeud(int i){
@@ -146,18 +146,18 @@ public abstract class Noeud {
 	}
 	
 	/**
-	 * Methode setListeFils
-	 * @param listeFils : liste de noeuds a mettre dans le noeud courant
+	 * 
+	 * @param listeFils liste de noeuds a mettre dans le noeud courant
 	 */
 	public void setListeFils(ArrayList<Noeud> listeFils) {
 		this.listeFils = listeFils;
 	}
 	
 	/**
-	 * Methode affiche : Affiche l'arborescence de l'arbre et des noeuds
-	 * @param rang : rang du noeud concerné
-	 * @param last
-	 * @param barre
+	 * Affiche l'arborescence de l'arbre et des noeuds
+	 * @param rang rang du noeud concernï¿½
+	 * @param last L'Ã©lÃ¨ment est le dernier de sa liste
+	 * @param barre Parametre pour affichage des barres des liens des parents
 	 */
 	public void affiche(int rang, boolean last, ArrayList<Boolean> barre){
 		String res = "";
@@ -185,7 +185,7 @@ public abstract class Noeud {
 	}
 
 	/**
-	 * Methode info
+	 * 
 	 * @return String vide
 	 */
 	public String info() {

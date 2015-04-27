@@ -12,13 +12,13 @@ public enum Type {
 	BOOL (2);
 	
 	/**
-	 * Attribut value : int : valeur correspondant au type
+	 * valeur correspondant au type
 	 */
 	private int value;
 	
 	/**
 	 * Constructeur
-	 * @param value : valeur a attribuer
+	 * @param value valeur a attribuer
 	 */
 	Type(int value){
 		this.value = value;

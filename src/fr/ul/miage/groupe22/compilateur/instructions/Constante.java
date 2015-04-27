@@ -5,7 +5,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 /**
  * @author Groupe 22
- * Classe Constante : Correspond à un noeud de type Constante dans l'arbre
+ *  Correspond à un noeud de type Constante dans l'arbre
  */
 public class Constante extends Noeud {
 	
@@ -13,16 +13,16 @@ public class Constante extends Noeud {
 
 	/**
 	 * Constructeur
-	 * @param valeur : int correspondant a la valeur de la onstante
+	 * @param valeur int correspondant a la valeur de la onstante
 	 */
 	public Constante(int valeur){
 		this.valeur = valeur;
 	}
 
 	/**
-	 * Methode genererCode : genere le code assembleur correspondant au noeud
-	 * @param tds : tables des symboles contenant variables/fonctions
-	 * @param currentScope : correpond à l'emplacement de génération du code
+	 * genere le code assembleur correspondant au noeud
+	 * @param tds tables des symboles contenant variables/fonctions
+	 * @param currentScope correpond à l'emplacement de génération du code
 	 */
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
@@ -31,7 +31,7 @@ public class Constante extends Noeud {
 	}
 	
 	/**
-	 * Methode toString : Affichage du noeud en question
+	 * Affichage du noeud en question
 	 */
 	@Override
 	public String toString() {
@@ -39,8 +39,8 @@ public class Constante extends Noeud {
 	}
 	
 	/**
-	 * Methode info  
-	 * @return String : Valeur de la constante
+	 * 
+	 * @return Valeur de la constante
 	 */
 	@Override
 	public String info(){
@@ -48,8 +48,8 @@ public class Constante extends Noeud {
 	}
 
 	/**
-	 * Methode getValue
-	 * @return int : Valeur de la constante
+	 * 
+	 * @return Valeur de la constante
 	 */
 	public int getValue() {
 		return this.valeur;
