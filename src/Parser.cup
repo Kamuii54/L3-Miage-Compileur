@@ -21,31 +21,49 @@ import java.util.Map;
 import java.util.HashSet;
 
 parser code {:
-
+	
+	/**
+	* Methode affiche : Affichage de la Table Des Symbols
+	*/
 	public void affiche() {
 		action_obj.master.affiche(0, false, new ArrayList<>());
 		System.out.println(action_obj.tds);
 	}
 	
+	/**
+	* Methode generate : Genere le code du noeud principal ( arbre )
+	@return String : code genere
+	*/
 	public String generate() {
-	return action_obj.master.genererCode(action_obj.tds,ScopeGlobal.getInstance());
+		return action_obj.master.genererCode(action_obj.tds,ScopeGlobal.getInstance());
 	}
 
 :}
 
 action code {:
-
+	//table des symboles du programme
 	TableDesSymboles tds = new TableDesSymboles();
+	
+	//noeud principal
 	Noeud master = new Root();
-	ArrayList<Noeud> current_list = new ArrayList<Noeud>();
+	
+	//Liste des symbole non declare
 	Set<Symbole> undeclared = new HashSet<>();
 
-	public Stack<Scope> scopes = new Stack<>(); // Portées des variables
+	//Pile des portees de variables
+	public Stack<Scope> scopes = new Stack<>();
 
+	/**
+	* Methode newScope : Ajoute une nouvelle portee a la pile
+	*/
 	public void newScope() {
 		scopes.push(new Scope());
 	}
-
+	
+	/**
+	* Methode getLastScope 
+	* @return Scope : portee actuel de l'analyse
+	*/
 	public Scope getLastScope() {
     	if (scopes.isEmpty()) {
     	   return ScopeGlobal.getInstance();
@@ -53,10 +71,18 @@ action code {:
 		return scopes.peek();
 	}
 
+	/*
+	* Methode deleteScope : Supprime la derniere portee
+	* @return Scope
+	*/
 	public Scope deleteScope() {
 		return scopes.pop();
 	}
 
+	/**
+	* Methode verifierUndeclared
+	* Verifie si des variables n ont pas ete declares
+	*/
 	public void verifierUndeclared() throws Exception {
 		if(!undeclared.isEmpty()){
 			Iterator<Symbole> it = undeclared.iterator();
@@ -68,6 +94,12 @@ action code {:
 		}
 	}
 
+	/**
+	* Methode createAffect
+	* @param idf : String : nom de la variable
+	* @param n : Noeud : noeud expression a affecter a la variable
+	* @return Affectaction : noeud correspondant
+	*/
 	public Affectation createAffect(String idf, Noeud n) {
 		Affectation n_ret = null;
 		//il met variable dans T..
@@ -79,10 +111,19 @@ action code {:
 		return n_ret;
 	}
 
+	/**
+	* Methode addVartoTDS : Ajoute une variable dans la table des symboles
+	* @param t : Type : type de la variable
+	* @param idf : String : nom de la variable
+	* @param temp : boolean : indique si la variable temporaire donc non défini
+	* @param isParam : boolean : indique si la variable est un paramètre
+	* @return Symbole : symbole ajout� au TDS
+	*/
 	public Symbole addVarToTDS(Type t, String idf, boolean temp, boolean isParam) throws Exception{
 		Symbole s;
 		Definition d  = new Definition(idf, getLastScope());
 		String type;
+		//on attribut le type de variable 
 		if(isParam){
 			type = "parametre";
 		}else{
@@ -91,12 +132,15 @@ action code {:
 			else
 				type = "local";
 		}
-
+		// on verifie que la variable est dans le tds
 		if (tds.hasSymbole(d)) {
 			s = tds.getSymbole(d);
+			//on verifie si le type de la variable correspond
 			if(t != s.getType())
 				throw new Exception("Variable "+idf+" a été appelé avec un autre type de données");
+			//on verifie que la variable n'est pas temporaire
 			if(!temp){
+				//on verifie que la variable n est pas deja declare
 				if(s.get("undeclared") == null)
 					throw new Exception("Variable "+idf+" a été déclaré deux fois");
 				s.remove("undeclared");
@@ -104,18 +148,22 @@ action code {:
 				if(getLastScope() == ScopeGlobal.getInstance()){
 					s.add("type", "local");
 					tds.remove(d);
+					//ajout dans le tds
 					tds.insert(idf, getLastScope(), s);
 				}
 			}
 		}else{
+			//ajout dans le tds
 			s = new Symbole(idf, t, getLastScope(),type);
 			tds.insert(idf, getLastScope(), s);
 		}
 		if(temp){
+		//ajout d une variable temporaire
 			s.add("undeclared", "true");
 			undeclared.add(s);
 		}
 		if(isParam){
+		//la variable est un parametre
 			s.add("type", "parametre");
 			s.add("rang", ""+getLastScope().getRangParam());
 			getLastScope().addRangParam();
@@ -123,6 +171,14 @@ action code {:
 		return s;
 	}
 
+	/**
+	* Methode defVar : Definit une variable en fonction d une constante
+	* @param t : Type : type de la variable
+	* @param idf : String : nom de la variable
+	* @param n : Constante : valeur de la variable
+	* @param temp : boolean : indique si la variable temporaire donc non défini
+	*/
+	
 	public void defVar(Type t, String idf, Constante n, boolean temp) throws Exception{
 		Symbole s = addVarToTDS(t, idf, temp, false);
 		if(!temp){
@@ -140,12 +196,25 @@ action code {:
 			getLastScope().addRangVar();
 		}
 	}
-
+	
+	/**
+	* Methode insertionFgFd : insere un fils gauche et droit dans un noeud
+	* @param o : Noeud : noeud pere
+	* @param f : Noeud : fils gauche
+	* @param a : Noeud : fils droit
+	* @return Noeud : mis a jour
+	*/
+	
 	public Noeud insertionFgFd(Noeud o, Noeud f, Noeud a) {
 		o.InsererFilsGauche(f);
 		o.InsererFilsDroit(a);
 		return o;
 	}
+	
+	/**
+	*Methode existVar : Verifie si une variable est contenu dans le tds
+	*@param idf : nom de la variable
+	*/
 	
 	public void existVar (String idf) throws Exception{
 		if (!tds.hasSymbole(new Definition(idf,getLastScope()))) {
@@ -154,6 +223,12 @@ action code {:
 			}
 		}
 	}
+	
+	/**
+	* Methode isFonctionInt : Verifie si une fonction est de type INT
+	* @param n : Noeud de la fonction
+	* @param param : Liste des parametres de la fonction
+	*/
 	
 	public void isFonctionInt (Noeud n, ArrayList<Noeud> param) throws Exception{
 		Symbole s;
@@ -168,6 +243,11 @@ action code {:
 		}
 	}
 	
+	/**
+	* Methode isVarInt : Verifie si une variable est de type INT
+	* @param n : Noeud de la variable
+	*/
+	
 	public void isVarInt (Noeud n) throws Exception{
 		Symbole s;
 		if (!tds.hasSymbole(n.getIdf(), getLastScope()) && !tds.hasSymbole(n.getIdf(), ScopeGlobal.getInstance())) {
@@ -179,6 +259,11 @@ action code {:
 		}
 	}
 
+	/**
+	* Methode verifNbParam : Verifie que le nombre de parametres d'un appel correspondant a la fonction
+	* @param idf : nom de la fonction
+	* @param p : ArrayList<Noeud> : liste des parametres d'appel
+	*/
 	public void  verifNbParam(String idf, ArrayList<Noeud> p) throws Exception {
 		Definition d = new Definition(idf,ScopeGlobal.getInstance());
 		if (tds.hasSymbole(d)) {
@@ -190,7 +275,16 @@ action code {:
 			}
 		}
 	}
-
+	
+	/**
+	* Methode defFonction : Definit une fonction dans le tds,
+	* Si la fonction a été défini temporairement avant supprime l'attribut undeclared et mets à jour ses attributs si temp est à faux
+	* @param t : Type de la fonction
+	* @param n : noeud de la fonction
+	* @param fils : ArrayList<Noeud> : liste des sous instructinos de la fonction
+	* @param param : ArrayList<Noeud> : liste des parametres
+	* @param temp : fonction temporaire donc non défini
+	*/
 	public void defFonction(Type t, String n, ArrayList<Noeud> fils, ArrayList<Noeud> param, boolean temp) throws Exception{
 		Noeud noeud_f = new Fonction(n);
 		Definition d = new Definition(n,ScopeGlobal.getInstance());
@@ -244,6 +338,14 @@ action code {:
 		}
 	}
 
+	/**
+	* Methode createIf : cree un noeud de type If
+	* @param b : Noeud conditionnel
+	* @param l : ArrayList<Noeud> : clause if
+	* @param c : ArrayList<Noeud> : clause else
+	* @preturn Noeud : noeud "if"
+	*/
+	
 	public Noeud createIf(Noeud b, ArrayList<Noeud> l, ArrayList<Noeud> c) {
 		Noeud n_ret = new Condition();
 		n_ret.InsererUnFils(b);
@@ -254,12 +356,28 @@ action code {:
 		return n_ret;
 	}
 
+	/**
+	* Methode createBool : cree un noeud de type booleen
+	* @param e : operateur booleen
+	* @param bo : booleen gauche
+	* @param be : booleen droit
+	* @return Noeud : noeud expression booleenne
+	*/
+
 	public Noeud createBool(Noeud e, Noeud bo, Noeud be) {
+	
 		bo.InsererFilsGauche(e);
 		bo.InsererFilsDroit(be);
 		return bo;
 	}
 
+	/**
+	* Methode createBoucle : cree un noeud de type boucle
+	* @param be : Noeud conditionnelle de la boucle
+	* @param l : ArrayList<Noeud> : liste d'instructions de la boucle
+	* @return Noeud : noeud "boucle"
+	*/
+	
 	public Noeud createBoucle(Noeud be, ArrayList<Noeud> l) {
 		Noeud n_ret = new Boucle();
 		n_ret.InsererFilsGauche(be);
@@ -268,14 +386,23 @@ action code {:
 		return n_ret;
 	}
 
+	/**
+	* Methode defMultiVar : Definit une liste de variables
+	* @param t : Type : type des variable
+	* @param idf : String : nom de la premiere variable
+	* @param n : Constante : valeur de la premiere variable
+	* @param l : HashMap<Variable,Noeud> : liste des variables/valeurs associ�es
+	*/
+	
 	public void defMultiVar(Type t, String idf, Constante n, HashMap<Variable,Noeud> l) throws Exception {
 		defVar(t, idf, n, false);
 
 		Set cles = l.keySet();
 		Iterator it = cles.iterator();
-		
+		//boucle sur l'ensemble des variables
 		for (Map.Entry<Variable, Noeud> entry : l.entrySet()) {
 			Variable key = entry.getKey();
+			//definition de la variable
 			defVar(t, key.getIdf(), n, false);
 		}
 	}

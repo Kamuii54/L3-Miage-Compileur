@@ -10,13 +10,25 @@ import fr.ul.miage.groupe22.compilateur.environnement.Symbole;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 import fr.ul.miage.groupe22.compilateur.environnement.Type;
 
+/**
+ * @author Groupe 22
+ * Classe Fonction : Correspond à un noeud de type Fonction dans l'arbre
+ */
 public class Fonction extends Noeud {
 	
+	/**
+	 * Constructeur
+	 * @param idf  nom de la fonction
+	 */
 	public Fonction(String idf){
 		super(idf);
 	}
 	
-	
+	/**
+	 * Methode genererCode : genere le code assembleur correspondant au noeud
+	 * @param tds : tables des symboles contenant variables/fonctions
+	 * @param currentScope : correpond à l'emplacement de génération du code
+	 */
 	@Override
 	public String genererCode(TableDesSymboles tds, Scope currentScope) {
 		String resultat = "";
@@ -48,6 +60,10 @@ public class Fonction extends Noeud {
 		return resultat;
 	}
 	
+	/**
+	 * Methode genererData : genere le code assembleur correspondant aux declarations des variables de la fonction
+	 * @param tds : tables des symboles contenant variables/fonctions
+	 */
 	private String genererData(TableDesSymboles tds, Scope scope) {
 		StringBuilder resultat = new StringBuilder();
 		Set<Definition> keys = tds.getTable().keySet();
@@ -68,11 +84,18 @@ public class Fonction extends Noeud {
 		return resultat.toString();
 	}
 	
+	/**
+	 * Methode toString : Affichage du noeud en question
+	 */
 	@Override
 	public String toString() {
 		return " -Fonction : "+ super.toString()+ " }- ";
 	}
 	
+	/**
+	 * Methode info
+	 * @return String : nom de la fonction
+	 */
 	@Override
 	public String info(){
 		return this.getIdf();

@@ -1,14 +1,5 @@
-int x ;
 
-int g(){
-	int n=2;
-	return n;
-}
-
-int f(){
-	return g();
-}
 
 void main(){
-	x = f();
+	write(3);
 }
