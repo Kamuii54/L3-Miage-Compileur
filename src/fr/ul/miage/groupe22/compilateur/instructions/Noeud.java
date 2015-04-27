@@ -72,7 +72,8 @@ public abstract class Noeud {
 	/**
 	 * genererCode : genere le code assembleur correspondant au noeud
 	 * @param tds tables des symboles contenant variables/fonctions
-	 * @param currentScope correpond � l'emplacement de g�n�ration du code
+	 * @param currentScope correpond à la portée actuel de la génération du code
+	 * @return Le codé généré
 	 */
 	public abstract String genererCode(TableDesSymboles tds, Scope currentScope);
 	

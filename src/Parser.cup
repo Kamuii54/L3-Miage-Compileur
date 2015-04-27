@@ -32,7 +32,7 @@ parser code {:
 	
 	/**
 	* Genere le code du noeud principal ( arbre )
-	@return code genere
+	* @return code genere
 	*/
 	public String generate() {
 		return action_obj.master.genererCode(action_obj.tds,ScopeGlobal.getInstance());

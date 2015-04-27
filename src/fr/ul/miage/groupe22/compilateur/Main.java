@@ -13,6 +13,7 @@ import fr.ul.miage.groupe22.compilateur.generated.ParserCup;
 import fr.ul.miage.groupe22.compilateur.generated.Yylex;
 
 /**
+ * Classe lancant le programme, prend au moins deux paramètres la source et la destination
  * @author Azim Roussanaly
  *
  */
