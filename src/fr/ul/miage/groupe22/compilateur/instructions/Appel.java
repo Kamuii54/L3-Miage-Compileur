@@ -7,7 +7,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 import fr.ul.miage.groupe22.compilateur.environnement.Type;
 
 /**
- * @author Groupe 22
+ * 
  *  Correspond à un noeud de type Appel dans l'arbre
  */
 public class Appel extends Noeud {

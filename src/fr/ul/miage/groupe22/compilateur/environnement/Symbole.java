@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Correspond a un symbole (variable/fonction) du programme avec sa portee
- * @author Groupe 22
+ * 
  */
 public class Symbole {
 

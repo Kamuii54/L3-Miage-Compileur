@@ -3,7 +3,7 @@ package fr.ul.miage.groupe22.compilateur.environnement;
 /**
  * Classe Type
  * Correspond aux différent types que peut prendre une variable
- * @author Groupe 22
+ * 
  *
  */
 public enum Type {

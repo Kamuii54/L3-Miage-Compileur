@@ -4,7 +4,7 @@ package fr.ul.miage.groupe22.compilateur.environnement;
 /**
  * Classe Definition
  * Correspond a la definition d'une variable/fonction, son nom associ� a sa portee
- * @author Groupe 22
+ * 
  */
 public class Definition {
 

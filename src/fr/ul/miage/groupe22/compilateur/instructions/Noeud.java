@@ -7,7 +7,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 /**
  * Classe abstraite Noeud
  * Correspond a un abstrait de l'arbre
- * @author Groupe 22
+ * 
  */
 public abstract class Noeud {
 

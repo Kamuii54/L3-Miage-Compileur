@@ -6,7 +6,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.Scope;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 /**
- * @author Groupe 22
+ * 
  *  Correspond à une liste de noeuds
  */
 public class Container extends Noeud{

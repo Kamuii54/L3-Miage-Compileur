@@ -4,7 +4,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.Scope;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 /**
- * @author Groupe 22
+ * 
  *  Correspond à un noeud de type Constante dans l'arbre
  */
 public class Constante extends Noeud {

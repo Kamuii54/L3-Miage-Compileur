@@ -3,7 +3,7 @@ package fr.ul.miage.groupe22.compilateur.environnement;
 /**
  * Classe Scope 
  * Correspond a la portee (position) d une variable/fonction
- * @author Groupe 22
+ * 
  *
  */
 public class Scope {

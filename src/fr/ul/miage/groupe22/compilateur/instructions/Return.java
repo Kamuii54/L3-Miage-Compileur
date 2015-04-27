@@ -5,8 +5,8 @@ import fr.ul.miage.groupe22.compilateur.environnement.Symbole;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 /**
- * @author Groupe 22
- *  Correspond � un noeud de type Return dans l'arbre
+ * 
+ *  Correspond à un noeud de type Return dans l'arbre
  */
 public class Return extends Noeud {
 

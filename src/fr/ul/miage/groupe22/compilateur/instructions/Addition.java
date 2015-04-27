@@ -3,8 +3,8 @@ import fr.ul.miage.groupe22.compilateur.environnement.Scope;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 
 /**
- * @author Groupe 22
- *  Correspond � un noeud de type Addition dans l'arbre
+ * 
+ *  Correspond à un noeud de type Addition dans l'arbre
  */
 public class Addition extends Noeud {
 

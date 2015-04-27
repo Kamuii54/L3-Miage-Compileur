@@ -5,7 +5,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.ScopeGlobal;
 import fr.ul.miage.groupe22.compilateur.environnement.Symbole;
 import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 /**
- * @author Groupe 22
+ * 
  *  Correspond à un noeud de type Affectation dans l'arbre
  */
 public class Affectation extends Noeud {

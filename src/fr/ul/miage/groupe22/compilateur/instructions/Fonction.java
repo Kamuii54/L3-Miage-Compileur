@@ -11,7 +11,7 @@ import fr.ul.miage.groupe22.compilateur.environnement.TableDesSymboles;
 import fr.ul.miage.groupe22.compilateur.environnement.Type;
 
 /**
- * @author Groupe 22
+ * 
  *  Correspond à un noeud de type Fonction dans l'arbre
  */
 public class Fonction extends Noeud {
